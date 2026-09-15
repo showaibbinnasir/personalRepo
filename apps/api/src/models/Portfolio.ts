@@ -126,4 +126,5 @@ const portfolioSchema = new mongoose.Schema(
   { timestamps: true, minimize: false }
 );
 
-export const Portfolio = mongoose.models.Portfolio || mongoose.model("Portfolio", portfolioSchema);
+export const Portfolio =
+  (mongoose.models.Portfolio as mongoose.Model<any>) || mongoose.model("Portfolio", portfolioSchema);

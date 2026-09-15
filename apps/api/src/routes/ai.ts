@@ -15,7 +15,7 @@ router.post("/chat", limiter, async (req, res) => {
   const model = process.env.OPENAI_MODEL;
   if (!apiKey || !model) return res.status(503).json({ error: "AI assistant is not configured yet" });
 
-  const portfolio = await Portfolio.findOne({ key: "main" }).lean();
+  const portfolio = (await Portfolio.findOne({ key: "main" }).lean()) as Record<string, any> | null;
   if (!portfolio) return res.status(404).json({ error: "Portfolio data unavailable" });
 
   const publicContext = {
