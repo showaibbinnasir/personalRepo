@@ -1,0 +1,13 @@
+{
+  "name": "showaib-portfolio",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @showaib/web\" \"npm run dev -w @showaib/api\"",
+    "build": "npm run build -w @showaib/api && npm run build -w @showaib/web",
+    "seed": "npm run seed -w @showaib/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
