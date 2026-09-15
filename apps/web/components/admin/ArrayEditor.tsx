@@ -1,7 +1,8 @@
 "use client";
 import ImageUploader from "./ImageUploader";
+import RichTextEditor from "./RichTextEditor";
 
-type Field = { key: string; label: string; type?: "text"|"textarea"|"checkbox"|"number"|"csv"|"lines"|"image"; full?: boolean; placeholder?: string };
+type Field = { key: string; label: string; type?: "text"|"textarea"|"checkbox"|"number"|"csv"|"lines"|"image"|"richtext"; full?: boolean; placeholder?: string };
 
 type Props = {
   title: string;
@@ -29,6 +30,7 @@ export default function ArrayEditor({ title, items, onChange, fields, blank, lab
           if(field.type==="csv") return <div className={`field ${field.full?"full":""}`} key={field.key}><label>{field.label}</label><input value={(value||[]).join(", ")} onChange={e=>update(index,field.key,e.target.value.split(",").map((v:string)=>v.trim()).filter(Boolean))} placeholder={field.placeholder||"Comma separated"}/></div>;
           if(field.type==="lines") return <div className={`field ${field.full?"full":""}`} key={field.key}><label>{field.label}</label><textarea value={(value||[]).join("\n")} onChange={e=>update(index,field.key,e.target.value.split("\n").map((v:string)=>v.trim()).filter(Boolean))} placeholder={field.placeholder||"One item per line"}/></div>;
           if(field.type==="image") return <div className={`field ${field.full?"full":""}`} key={field.key}><label>{field.label}</label><ImageUploader value={value||""} onChange={v=>update(index,field.key,v)}/></div>;
+          if(field.type==="richtext") return <div className={`field ${field.full?"full":""}`} key={field.key}><label>{field.label}</label><RichTextEditor value={value||""} onChange={v=>update(index,field.key,v)}/></div>;
           return <div className={`field ${field.full?"full":""}`} key={field.key}><label>{field.label}</label><input type={field.type==="number"?"number":"text"} value={value??""} onChange={e=>update(index,field.key,field.type==="number"?Number(e.target.value):e.target.value)} placeholder={field.placeholder}/></div>;
         })}
       </div></div>

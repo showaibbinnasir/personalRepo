@@ -119,3 +119,11 @@ Projects, skills and professional work-experience arrays are deliberately left e
 ## Notes
 
 Do not commit `.env` files. Rotate any key that is accidentally exposed. Before production, change the admin password, use a strong JWT secret and configure MongoDB Atlas network/security settings appropriately.
+
+## Rich project case studies
+
+`Projects → Full description` now uses a Tiptap rich-text editor instead of a plain textarea. It supports semantic H2/H3 headings, controlled font sizes, bold/italic/underline/strike, lists, blockquotes, links, text alignment, undo/redo, and inline images uploaded through the existing authenticated ImgBB upload endpoint.
+
+The field is still stored as the project's existing `description` string in MongoDB, but its value is now HTML. Existing plain-text descriptions remain readable and are converted to a paragraph when opened in the editor. Project cards continue to use `summary`; when a project has a full description they show a **Case study** link to `/projects/[id]`, where the rich article is sanitized before rendering.
+
+After pulling these changes, install the new frontend dependencies from the repository root with `npm install`, then run the normal development/build commands.

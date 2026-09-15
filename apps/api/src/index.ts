@@ -30,12 +30,5 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   res.status(500).json({ error: "Unexpected server error" });
 });
 
-if (!process.env.VERCEL) {
-  const port = Number(process.env.PORT || 5000);
-
-  app.listen(port, () => {
-    console.log(`API listening on http://localhost:${port}`);
-  });
-}
-
-export default app;
+const port = Number(process.env.PORT || 5000);
+app.listen(port, () => console.log(`API listening on http://localhost:${port}`));

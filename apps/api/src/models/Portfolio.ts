@@ -126,9 +126,4 @@ const portfolioSchema = new mongoose.Schema(
   { timestamps: true, minimize: false }
 );
 
-export type PortfolioData =
-  mongoose.InferSchemaType<typeof portfolioSchema>;
-
-export const Portfolio: mongoose.Model<PortfolioData> =
-  (mongoose.models.Portfolio as mongoose.Model<PortfolioData>) ||
-  mongoose.model<PortfolioData>("Portfolio", portfolioSchema);
+export const Portfolio = mongoose.models.Portfolio || mongoose.model("Portfolio", portfolioSchema);
