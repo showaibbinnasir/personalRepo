@@ -77,7 +77,7 @@ export default function ArrayEditor({
   function addItem() {
     const newItem = {
       ...blank,
-
+      id: crypto.randomUUID(),
       /*
        * These are useful because your public
        * portfolio already uses visible/order.
