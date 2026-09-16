@@ -855,6 +855,562 @@ main {
     margin-bottom: 14px;
     overflow: hidden
 }
+/* ========================================
+   PROJECTS
+   ======================================== */
+
+.projects-section .section-grid {
+  margin-bottom: 60px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  min-width: 0;
+  overflow: hidden;
+
+  background: #0e0b0b;
+  border: 1px solid var(--line);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(244, 241, 236, 0.35);
+}
+
+.project-card.featured {
+  grid-column: span 2;
+}
+
+.project-card > img,
+.project-image-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+.project-card > img {
+  object-fit: cover;
+
+  transition:
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.project-card:hover > img {
+  transform: scale(1.015);
+}
+
+.project-image-placeholder {
+  display: grid;
+  place-content: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #171111,
+      #0a0707
+    );
+
+  color: #5b5351;
+
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+.project-copy {
+  padding: 26px;
+}
+
+.project-copy small {
+  color: var(--muted);
+
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.project-copy h3 {
+  margin: 12px 0;
+
+  font-size: clamp(
+    30px,
+    4vw,
+    58px
+  );
+
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.project-copy p {
+  color: #c8c1bc;
+
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.tags span {
+  padding: 8px 11px;
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  font-size: 11px;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+
+  margin-top: 24px;
+
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.project-links a {
+  position: relative;
+  padding-bottom: 4px;
+
+  transition:
+    color 0.2s ease;
+}
+
+.project-links a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 1px;
+
+  background: currentColor;
+
+  content: "";
+
+  transform: scaleX(0);
+  transform-origin: right;
+
+  transition:
+    transform 0.25s ease;
+}
+
+.project-links a:hover {
+  color: var(--accent);
+}
+
+.project-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.empty-public {
+  padding: 56px;
+
+  border: 1px dashed var(--line);
+
+  color: var(--muted);
+
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
+
+/* ========================================
+   PROJECT VIEW MORE + PAGINATION
+   ======================================== */
+
+.projects-navigation {
+  width: 100%;
+
+  margin-top: 58px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 24px;
+}
+
+
+/* VIEW MORE / SHOW LESS */
+
+.view-more-projects,
+.show-less-projects {
+  min-width: 250px;
+  min-height: 56px;
+
+  padding: 0 24px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 38px;
+
+  appearance: none;
+
+  border: 1px solid
+    rgba(244, 241, 236, 0.28);
+
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--fg);
+
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.view-more-projects:hover,
+.show-less-projects:hover {
+  background: var(--fg);
+  border-color: var(--fg);
+
+  color: var(--bg);
+
+  transform: translateY(-2px);
+}
+
+.navigation-arrow {
+  display: inline-block;
+
+  font-size: 17px;
+  line-height: 1;
+
+  transition:
+    transform 0.25s ease;
+}
+
+.view-more-projects:hover
+  .navigation-arrow {
+  transform: translateY(3px);
+}
+
+.show-less-projects:hover
+  .navigation-arrow {
+  transform: translateY(-3px);
+}
+
+
+/* ========================================
+   PAGINATION
+   ======================================== */
+
+.project-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.pagination-pages button,
+.pagination-arrow {
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  appearance: none;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: var(--muted);
+
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pagination-arrow {
+  border: 1px solid
+    rgba(244, 241, 236, 0.2);
+
+  color: var(--fg);
+
+  font-size: 16px;
+}
+
+.pagination-pages button:hover {
+  color: var(--fg);
+
+  background:
+    rgba(244, 241, 236, 0.08);
+}
+
+.pagination-pages button.active {
+  background: var(--accent);
+
+  color: #fff;
+}
+
+.pagination-arrow:hover:not(
+    :disabled
+  ) {
+  background: var(--fg);
+  border-color: var(--fg);
+
+  color: var(--bg);
+
+  transform: scale(1.06);
+}
+
+.pagination-arrow:disabled {
+  opacity: 0.25;
+
+  cursor: not-allowed;
+}
+
+.pagination-pages button:focus-visible,
+.pagination-arrow:focus-visible,
+.view-more-projects:focus-visible,
+.show-less-projects:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+
+/* ========================================
+   PROJECT COUNT
+   ======================================== */
+
+.project-results-meta {
+  color: var(--muted);
+
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+
+/* ========================================
+   CV ACTIONS
+   ======================================== */
+
+.cvActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+.viewCV,
+.downloadCV {
+  min-height: 48px;
+
+  padding: 0 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.18);
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.viewCV {
+  background:
+    var(--accent, #a71919);
+
+  border-color:
+    var(--accent, #a71919);
+
+  color: #fff;
+}
+
+.viewCV:hover {
+  background: transparent;
+
+  color:
+    var(--accent, #a71919);
+
+  transform: translateY(-2px);
+}
+
+.downloadCV {
+  background: transparent;
+
+  color:
+    var(--fg, #f4f1ec);
+}
+
+.downloadCV:hover {
+  background:
+    var(--fg, #f4f1ec);
+
+  border-color:
+    var(--fg, #f4f1ec);
+
+  color:
+    var(--bg, #080606);
+
+  transform: translateY(-2px);
+}
+
+.viewCV:focus-visible,
+.downloadCV:focus-visible {
+  outline: 2px solid
+    var(--accent, #a71919);
+
+  outline-offset: 4px;
+}
+
+
+/* ========================================
+   PROJECT TABLET
+   ======================================== */
+
+@media (max-width: 900px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card.featured {
+    grid-column: auto;
+  }
+
+  .projects-navigation {
+    margin-top: 46px;
+  }
+}
+
+
+/* ========================================
+   PROJECT MOBILE
+   ======================================== */
+
+@media (max-width: 560px) {
+  .project-grid {
+    gap: 18px;
+  }
+
+  .project-copy {
+    padding: 20px 18px;
+  }
+
+  .project-copy h3 {
+    font-size: 34px;
+  }
+
+  .project-copy p {
+    font-size: 15px;
+  }
+
+  .projects-navigation {
+    margin-top: 38px;
+
+    gap: 20px;
+  }
+
+  .view-more-projects,
+  .show-less-projects {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .project-pagination {
+    width: 100%;
+
+    gap: 7px;
+  }
+
+  .pagination-pages {
+    gap: 2px;
+  }
+
+  .pagination-pages button,
+  .pagination-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .project-results-meta {
+    font-size: 8px;
+  }
+
+  .cvActions {
+    width: 100%;
+  }
+
+  .viewCV,
+  .downloadCV {
+    min-width: 145px;
+
+    flex: 1;
+  }
+}
 
 .item-head {
     display: flex;
