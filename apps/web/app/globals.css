@@ -1411,7 +1411,541 @@ main {
     flex: 1;
   }
 }
+/* =========================================
+   ARRAY EDITOR
+   ========================================= */
 
+.array-editor {
+  width: 100%;
+}
+
+.array-editor-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 22px;
+}
+
+.array-editor-top h3 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.array-editor-top small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #837b77;
+
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.array-editor-top-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+/* =========================================
+   ADD / SECONDARY BUTTONS
+   ========================================= */
+
+.admin-add-button,
+.admin-secondary-button {
+  appearance: none;
+
+  padding: 11px 16px;
+
+  border-radius: 999px;
+
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-add-button {
+  border: 1px solid var(--accent, #a71919);
+
+  background: var(--accent, #a71919);
+
+  color: #fff;
+}
+
+.admin-add-button:hover {
+  transform: translateY(-1px);
+
+  filter: brightness(1.08);
+}
+
+.admin-secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  background: transparent;
+
+  color: #b9b1ac;
+}
+
+.admin-secondary-button:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+
+  color: #fff;
+}
+
+
+/* =========================================
+   ITEMS
+   ========================================= */
+
+.array-editor-items {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.admin-array-item {
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.018);
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.admin-array-item.is-open {
+  border-color: rgba(255, 255, 255, 0.18);
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+
+/* =========================================
+   ACCORDION HEADER
+   ========================================= */
+
+.admin-array-header {
+  min-height: 72px;
+
+  display: flex;
+  align-items: stretch;
+
+  border-bottom: 1px solid transparent;
+}
+
+.admin-array-item.is-open
+  .admin-array-header {
+  border-bottom-color:
+    rgba(255, 255, 255, 0.08);
+}
+
+.admin-accordion-toggle {
+  min-width: 0;
+  flex: 1;
+
+  padding: 0 20px;
+
+  display: grid;
+  grid-template-columns:
+    40px
+    minmax(0, 1fr)
+    auto
+    30px;
+
+  align-items: center;
+
+  gap: 12px;
+
+  appearance: none;
+
+  border: 0;
+
+  background: transparent;
+
+  color: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.admin-accordion-toggle:hover {
+  background:
+    rgba(255, 255, 255, 0.025);
+}
+
+.admin-accordion-index {
+  color: #6d6662;
+
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.admin-accordion-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.admin-accordion-info strong {
+  overflow: hidden;
+
+  color: #f3efeb;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-accordion-info small {
+  overflow: hidden;
+
+  color: #7f7773;
+
+  font-size: 11px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   ACCORDION ARROW
+   ========================================= */
+
+.admin-accordion-arrow {
+  color: #837b77;
+
+  font-size: 17px;
+
+  transition:
+    transform 0.25s ease,
+    color 0.2s ease;
+}
+
+.admin-array-item.is-open
+  .admin-accordion-arrow {
+  color: #fff;
+
+  transform: rotate(180deg);
+}
+
+
+/* =========================================
+   PROJECT BADGES
+   ========================================= */
+
+.admin-project-badges {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.admin-badge {
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.admin-badge.featured {
+  border: 1px solid
+    rgba(167, 25, 25, 0.5);
+
+  background:
+    rgba(167, 25, 25, 0.12);
+
+  color: #df827b;
+}
+
+.admin-badge.hidden {
+  border: 1px solid
+    rgba(255, 255, 255, 0.1);
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  color: #79716d;
+}
+
+
+/* =========================================
+   ITEM ACTIONS
+   ========================================= */
+
+.admin-item-actions {
+  flex-shrink: 0;
+
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  border-left:
+    1px solid rgba(255, 255, 255, 0.07);
+}
+
+.admin-item-actions button {
+  width: 34px;
+  height: 34px;
+
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  appearance: none;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #aaa29d;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.admin-item-actions button:hover:not(:disabled) {
+  border-color:
+    rgba(255, 255, 255, 0.25);
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  color: #fff;
+}
+
+.admin-item-actions button:disabled {
+  opacity: 0.2;
+
+  cursor: not-allowed;
+}
+
+.admin-item-actions
+  button.delete:hover {
+  border-color:
+    rgba(220, 60, 60, 0.45);
+
+  background:
+    rgba(220, 60, 60, 0.1);
+
+  color: #ef7474;
+}
+
+.admin-item-actions
+  button.visibility-off {
+  opacity: 0.45;
+}
+
+
+/* =========================================
+   ACCORDION BODY
+   ========================================= */
+
+.admin-array-body {
+  padding: 24px;
+
+  animation:
+    adminAccordionOpen
+    0.2s ease;
+}
+
+@keyframes adminAccordionOpen {
+  from {
+    opacity: 0;
+    transform:
+      translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================================
+   NON-ACCORDION TITLE
+   ========================================= */
+
+.admin-standard-item-title {
+  flex: 1;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+}
+
+.admin-standard-item-title span {
+  color: #6d6662;
+
+  font-size: 10px;
+}
+
+.admin-standard-item-title strong {
+  color: #fff;
+
+  font-size: 14px;
+}
+
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+.admin-empty-state {
+  padding: 50px 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 20px;
+
+  border:
+    1px dashed rgba(255, 255, 255, 0.12);
+
+  border-radius: 12px;
+
+  color: #837b77;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   CHECKBOX
+   ========================================= */
+
+.admin-checkbox {
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+}
+
+.admin-checkbox input {
+  width: 17px;
+  height: 17px;
+
+  accent-color:
+    var(--accent, #a71919);
+}
+
+.admin-checkbox span {
+  color: #bdb5b0;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 760px) {
+  .array-editor-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .array-editor-top-actions {
+    width: 100%;
+  }
+
+  .admin-add-button {
+    flex: 1;
+  }
+
+  .admin-accordion-toggle {
+    padding: 0 14px;
+
+    grid-template-columns:
+      30px
+      minmax(0, 1fr)
+      24px;
+  }
+
+  .admin-project-badges {
+    display: none;
+  }
+
+  .admin-array-header {
+    flex-wrap: wrap;
+  }
+
+  .admin-item-actions {
+    width: 100%;
+
+    padding: 8px 14px;
+
+    justify-content: flex-end;
+
+    border-top:
+      1px solid rgba(255, 255, 255, 0.06);
+
+    border-left: 0;
+  }
+
+  .admin-array-body {
+    padding: 18px 14px;
+  }
+}
 .item-head {
     display: flex;
     justify-content: space-between;
@@ -2223,4 +2757,575 @@ main {
         min-height: 650px;
         height: 80vh;
     }
+}
+/* =========================================
+   PROJECT ACCORDION FORM LAYOUT
+   Light dashboard theme override
+   ========================================= */
+
+.project-editor-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 22px;
+    align-items: start;
+}
+
+
+/* Every field wrapper */
+
+.project-editor-grid .field-grid-item {
+    min-width: 0;
+}
+
+
+/* Full width fields:
+   summary
+   description
+   technologies
+   image
+*/
+
+.project-editor-grid .field-grid-item.full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================
+   ACCORDION BODY
+   ========================================= */
+
+.admin-array-body {
+    padding: 26px;
+    background: #fff;
+    color: #171313;
+}
+
+
+/* =========================================
+   FIELD STRUCTURE
+   ========================================= */
+
+.admin-array-body .field {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-array-body .field.full {
+    width: 100%;
+}
+
+
+/* Labels */
+
+.admin-array-body .field label {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #766e69;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   INPUTS
+   ========================================= */
+
+.admin-array-body .field input:not([type="checkbox"]),
+.admin-array-body .field textarea,
+.admin-array-body .field select {
+    width: 100%;
+    min-width: 0;
+
+    border: 1px solid #d8d1cb;
+    border-radius: 7px;
+
+    background: #faf8f5;
+    color: #171313;
+
+    padding: 12px 13px;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.admin-array-body .field input:not([type="checkbox"]) {
+    min-height: 45px;
+}
+
+
+.admin-array-body .field textarea {
+    min-height: 115px;
+    line-height: 1.55;
+    resize: vertical;
+}
+
+
+/* Focus */
+
+.admin-array-body .field input:not([type="checkbox"]):focus,
+.admin-array-body .field textarea:focus,
+.admin-array-body .field select:focus {
+    border-color: #8c1919;
+    background: #fff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(140, 25, 25, 0.08);
+}
+
+
+/* Placeholder */
+
+.admin-array-body .field input::placeholder,
+.admin-array-body .field textarea::placeholder {
+    color: #aaa19b;
+}
+
+
+/* =========================================
+   SHORT SUMMARY
+   ========================================= */
+
+.project-editor-grid
+.field-grid-item:nth-child(3)
+textarea {
+    min-height: 105px;
+}
+
+
+/* =========================================
+   RICH TEXT / BLOG EDITOR
+   ========================================= */
+
+.admin-array-body .rich-text-editor {
+    width: 100%;
+    overflow: hidden;
+
+    border: 1px solid #d8d1cb;
+    border-radius: 8px;
+
+    background: #faf8f5;
+}
+
+
+/* Toolbar */
+
+.admin-array-body .rich-text-toolbar {
+    padding: 9px 10px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 6px;
+
+    background: #f2efeb;
+
+    border-bottom:
+        1px solid #ddd6d1;
+}
+
+
+/* Toolbar buttons */
+
+.admin-array-body
+.rich-text-toolbar button {
+    min-width: 34px;
+    min-height: 32px;
+
+    padding: 5px 8px;
+
+    border:
+        1px solid #d6cec8;
+
+    border-radius: 5px;
+
+    background: #fff;
+    color: #292323;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+
+.admin-array-body
+.rich-text-toolbar button:hover {
+    background: #e8e2dd;
+    border-color: #c1b8b1;
+}
+
+
+.admin-array-body
+.rich-text-toolbar button.is-active,
+.admin-array-body
+.rich-text-toolbar button.active {
+    background: #171313;
+    border-color: #171313;
+    color: #fff;
+}
+
+
+/* Toolbar select */
+
+.admin-array-body
+.rich-text-toolbar select {
+    min-height: 32px;
+
+    padding: 5px 8px;
+
+    border: 1px solid #d6cec8;
+    border-radius: 5px;
+
+    background: #fff;
+    color: #292323;
+
+    font-size: 12px;
+}
+
+
+/* Editor content */
+
+.admin-array-body
+.rich-text-content,
+.admin-array-body
+.ProseMirror {
+    min-height: 320px;
+
+    padding: 22px;
+
+    outline: none;
+
+    background: #fff;
+    color: #221d1d;
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+
+/* Editor paragraphs */
+
+.admin-array-body
+.ProseMirror p {
+    margin: 0 0 16px;
+}
+
+
+/* Editor headings */
+
+.admin-array-body
+.ProseMirror h1,
+.admin-array-body
+.ProseMirror h2,
+.admin-array-body
+.ProseMirror h3 {
+    color: #171313;
+    line-height: 1.15;
+}
+
+.admin-array-body
+.ProseMirror h1 {
+    font-size: 32px;
+}
+
+.admin-array-body
+.ProseMirror h2 {
+    font-size: 25px;
+}
+
+.admin-array-body
+.ProseMirror h3 {
+    font-size: 20px;
+}
+
+
+/* Lists */
+
+.admin-array-body
+.ProseMirror ul,
+.admin-array-body
+.ProseMirror ol {
+    padding-left: 25px;
+}
+
+
+/* Quotes */
+
+.admin-array-body
+.ProseMirror blockquote {
+    margin-left: 0;
+
+    padding: 10px 18px;
+
+    border-left:
+        3px solid #8c1919;
+
+    background: #f7f4f1;
+
+    color: #5e5651;
+}
+
+
+/* Rich editor images */
+
+.admin-array-body
+.ProseMirror img {
+    display: block;
+
+    max-width: 100%;
+    height: auto;
+
+    margin: 22px auto;
+
+    border-radius: 6px;
+}
+
+
+/* Links inside rich editor */
+
+.admin-array-body
+.ProseMirror a {
+    color: #8c1919;
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   IMAGE UPLOADER
+   ========================================= */
+
+.admin-array-body .image-uploader {
+    width: 100%;
+
+    padding: 16px;
+
+    border:
+        1px solid #ddd6d1;
+
+    border-radius: 8px;
+
+    background: #faf8f5;
+}
+
+
+.admin-array-body
+.image-uploader img {
+    width: min(320px, 100%);
+    height: auto;
+
+    max-height: 220px;
+
+    object-fit: cover;
+
+    border-radius: 7px;
+
+    border:
+        1px solid #ddd6d1;
+}
+
+
+.admin-array-body
+.upload-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+
+.admin-array-body
+.upload-row button {
+    border: 1px solid #cfc6c0;
+
+    border-radius: 6px;
+
+    background: #fff;
+    color: #171313;
+
+    padding: 9px 12px;
+}
+
+
+.admin-array-body
+.upload-row button:hover {
+    background: #171313;
+    color: #fff;
+}
+
+
+/* =========================================
+   FEATURED PROJECT CHECKBOX
+   ========================================= */
+
+.project-editor-grid
+.admin-checkbox {
+    min-height: 48px;
+
+    padding: 12px 14px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border:
+        1px solid #ddd6d1;
+
+    border-radius: 7px;
+
+    background: #faf8f5;
+
+    cursor: pointer;
+}
+
+
+.project-editor-grid
+.admin-checkbox input {
+    width: 17px;
+    height: 17px;
+
+    flex-shrink: 0;
+
+    accent-color: #8c1919;
+}
+
+
+.project-editor-grid
+.admin-checkbox span {
+    color: #514a46;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+/* =========================================
+   PROJECT FORM SEPARATION
+   ========================================= */
+
+.project-editor-grid
+.field-grid-item.full {
+    padding-top: 4px;
+}
+
+
+/* Make rich description visually separated */
+
+.project-editor-grid
+.field-grid-item:nth-child(4) {
+    margin-top: 3px;
+
+    padding-top: 22px;
+
+    border-top:
+        1px solid #ece6e1;
+}
+
+
+/* Cover image separation */
+
+.project-editor-grid
+.field-grid-item:nth-child(6) {
+    padding-top: 22px;
+
+    border-top:
+        1px solid #ece6e1;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .project-editor-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    .project-editor-grid
+    .field-grid-item.full {
+        grid-column: auto;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 560px) {
+
+    .admin-array-body {
+        padding: 18px 14px;
+    }
+
+
+    .project-editor-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+
+    .project-editor-grid
+    .field-grid-item.full {
+        grid-column: auto;
+    }
+
+
+    .admin-array-body
+    .rich-text-toolbar {
+        padding: 8px;
+        gap: 5px;
+    }
+
+
+    .admin-array-body
+    .rich-text-toolbar button {
+        min-width: 32px;
+        padding: 5px 7px;
+    }
+
+
+    .admin-array-body
+    .rich-text-content,
+    .admin-array-body
+    .ProseMirror {
+        min-height: 250px;
+        padding: 16px;
+
+        font-size: 14px;
+    }
+
+
+    .admin-array-body
+    .image-uploader {
+        padding: 12px;
+    }
+
 }

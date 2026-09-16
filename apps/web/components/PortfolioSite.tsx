@@ -137,7 +137,6 @@ export default function PortfolioSite({
   const handleViewMore = () => {
     setShowAllProjects(true);
     setProjectPage(1);
-    scrollToProjects();
   };
 
   const handleShowLess = () => {
@@ -574,8 +573,8 @@ export default function PortfolioSite({
                   return (
                     <article
                       className={`project-card ${project.featured
-                          ? "featured"
-                          : ""
+                        ? "featured"
+                        : ""
                         }`}
                       key={
                         project.id
