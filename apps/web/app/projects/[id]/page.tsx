@@ -2,6 +2,11 @@ import { getPortfolio } from "@/lib/api";
 import { notFound } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
+
+const SITE_URL = "https://www.showaibbinnasir.site";
 
 function plainTextToHtml(value: string) {
   const escaped = value
@@ -43,6 +48,42 @@ function projectArticleHtml(value?: string) {
   });
 }
 
+export async function generateStaticParams() {
+  const portfolio = await getPortfolio();
+  if (!portfolio) return [];
+  return portfolio.projects.filter(p => p.visible !== false).map(p => ({ id: p.id }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const portfolio = await getPortfolio();
+  const project = portfolio?.projects.find(p => p.id === decodeURIComponent(id) && p.visible !== false);
+  if (!project) return { title: "Project not found" };
+
+  const title = project.title;
+  const description = project.summary || `${project.title} — a project by ${portfolio?.profile.name}.`;
+  const url = `${SITE_URL}/projects/${encodeURIComponent(project.id)}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      images: project.imageUrl ? [{ url: project.imageUrl, alt: project.title }] : undefined
+    },
+    twitter: {
+      card: project.imageUrl ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: project.imageUrl ? [project.imageUrl] : undefined
+    }
+  };
+}
+
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const portfolio = await getPortfolio();
@@ -60,8 +101,24 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
   const html = projectArticleHtml(project.description);
 
+  const projectLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.summary || undefined,
+    image: project.imageUrl || undefined,
+    url: `${SITE_URL}/projects/${encodeURIComponent(project.id)}`,
+    creator: { "@type": "Person", name: portfolio.profile.name },
+    keywords: project.tech?.length ? project.tech.join(", ") : undefined,
+    ...(project.liveUrl ? { sameAs: [project.liveUrl] } : {})
+  };
+
   return (
     <main className="project-detail-page" style={styles}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectLd) }}
+      />
       <header className="project-detail-nav">
         <a href="/">← Back to portfolio</a>
         <span>{portfolio.profile.shortName}</span>

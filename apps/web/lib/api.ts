@@ -4,7 +4,7 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000
 
 export async function getPortfolio(): Promise<Portfolio | null> {
   try {
-    const res = await fetch(`${API_URL}/portfolio`, { cache: "no-store" });
+    const res = await fetch(`${API_URL}/portfolio`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return await res.json();
   } catch {
