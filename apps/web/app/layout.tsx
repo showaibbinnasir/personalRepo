@@ -60,7 +60,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     sameAs: (portfolio.socialLinks || []).map(s => s.url).filter(Boolean)
   } : null;
 
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const gaId = process.env.NEXT_GA_ID;
 
   return (
     <html lang="en">
