@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { API_URL } from "@/lib/api";
+import { BROWSER_API } from "@/lib/api";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,7 @@ export default function ChatWidget() {
     setMessages(v => [...v, { role: "user", text: question }]);
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/ai/chat`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question }) });
+      const res = await fetch(`${BROWSER_API}/ai/chat`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: question }) });
       const json = await res.json();
       setMessages(v => [...v, { role: "assistant", text: json.answer || json.error || "AI assistant is unavailable." }]);
     } catch {

@@ -1,24 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Icon from "./icons";
 import ImageUploader from "./ImageUploader";
 import RichTextEditor from "./RichTextEditor";
+import TagInput from "./TagInput";
 
-type FieldType =
-  | "text"
-  | "textarea"
-  | "checkbox"
-  | "lines"
-  | "csv"
-  | "image"
-  | "richtext";
+export type FieldType = "text" | "url" | "textarea" | "checkbox" | "lines" | "csv" | "image" | "richtext";
 
-type Field = {
-  key: string;
-  label: string;
-  type?: FieldType;
-  full?: boolean;
-};
+export type Field = { key: string; label: string; type?: FieldType; full?: boolean; placeholder?: string; hint?: string };
 
 type Props = {
   title: string;
@@ -27,857 +17,167 @@ type Props = {
   fields: Field[];
   blank: Record<string, any>;
   labelKey: string;
-
-  /*
-   * Optional accordion mode.
-   * We will enable this only for Projects.
-   */
-  collapsible?: boolean;
+  subtitleKeys?: string[];
+  description?: string;
 };
 
-export default function ArrayEditor({
-  title,
-  items,
-  onChange,
-  fields,
-  blank,
-  labelKey,
-  collapsible = false,
-}: Props) {
-  /*
-   * Stores indexes of currently opened entries.
-   *
-   * Because Projects will use collapsible=true,
-   * they start collapsed.
-   */
-  const [openIndexes, setOpenIndexes] =
-    useState<Set<number>>(new Set());
+export default function ArrayEditor({ title, items, onChange, fields, blank, labelKey, subtitleKeys = [], description }: Props) {
+  const [open, setOpen] = useState<Set<string>>(new Set());
 
-  /*
-   * UPDATE ONE FIELD
-   */
-  function updateItem(
-    index: number,
-    key: string,
-    value: any,
-  ) {
-    const updated = [...items];
+  const toggle = (id: string) =>
+    setOpen(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
-    updated[index] = {
-      ...updated[index],
-      [key]: value,
-    };
+  const reindex = (list: any[]) => list.map((item, order) => ({ ...item, order }));
 
-    onChange(updated);
-  }
+  const update = (index: number, key: string, value: any) => {
+    const next = [...items];
+    next[index] = { ...next[index], [key]: value };
+    onChange(next);
+  };
 
-  /*
-   * ADD
-   */
-  function addItem() {
-    const newItem = {
-      ...blank,
-      id: crypto.randomUUID(),
-      /*
-       * These are useful because your public
-       * portfolio already uses visible/order.
-       */
-      visible:
-        blank.visible !== undefined
-          ? blank.visible
-          : true,
+  const add = () => {
+    const item = { ...blank, id: crypto.randomUUID(), visible: blank.visible ?? true, order: items.length };
+    onChange([...items, item]);
+    setOpen(prev => new Set(prev).add(item.id));
+    window.setTimeout(() => document.getElementById(`item-${item.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
+  };
 
-      order:
-        blank.order !== undefined
-          ? blank.order
-          : items.length,
-    };
+  const duplicate = (index: number) => {
+    const source = items[index];
+    const copy = { ...structuredClone(source), id: crypto.randomUUID(), [labelKey]: `${source[labelKey] || title} (copy)` };
+    const next = [...items];
+    next.splice(index + 1, 0, copy);
+    onChange(reindex(next));
+    setOpen(prev => new Set(prev).add(copy.id));
+  };
 
-    const newIndex = items.length;
+  const remove = (index: number) => {
+    const label = items[index]?.[labelKey] || `this ${title.toLowerCase()}`;
+    if (!window.confirm(`Delete “${label}”? You can still discard this by not saving.`)) return;
+    onChange(reindex(items.filter((_, i) => i !== index)));
+  };
 
-    onChange([
-      ...items,
-      newItem,
-    ]);
+  const move = (index: number, dir: -1 | 1) => {
+    const target = index + dir;
+    if (target < 0 || target >= items.length) return;
+    const next = [...items];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(reindex(next));
+  };
 
-    /*
-     * Automatically open the newly-created project.
-     */
-    if (collapsible) {
-      setOpenIndexes(
-        (previous) => {
-          const next =
-            new Set(previous);
-
-          next.add(newIndex);
-
-          return next;
-        },
-      );
-    }
-  }
-
-  /*
-   * DELETE
-   */
-  function deleteItem(
-    index: number,
-  ) {
-    const confirmed =
-      window.confirm(
-        `Delete this ${title.toLowerCase()}?`,
-      );
-
-    if (!confirmed) return;
-
-    const updated =
-      items.filter(
-        (_, itemIndex) =>
-          itemIndex !== index,
-      );
-
-    onChange(updated);
-
-    /*
-     * Fix accordion indexes after deletion.
-     */
-    setOpenIndexes(
-      (previous) => {
-        const next =
-          new Set<number>();
-
-        previous.forEach(
-          (openIndex) => {
-            if (
-              openIndex < index
-            ) {
-              next.add(
-                openIndex,
-              );
-            } else if (
-              openIndex > index
-            ) {
-              next.add(
-                openIndex - 1,
-              );
-            }
-          },
-        );
-
-        return next;
-      },
-    );
-  }
-
-  /*
-   * MOVE UP / DOWN
-   */
-  function moveItem(
-    index: number,
-    direction:
-      | "up"
-      | "down",
-  ) {
-    const targetIndex =
-      direction === "up"
-        ? index - 1
-        : index + 1;
-
-    if (
-      targetIndex < 0 ||
-      targetIndex >=
-      items.length
-    ) {
-      return;
-    }
-
-    const updated = [
-      ...items,
-    ];
-
-    [
-      updated[index],
-      updated[targetIndex],
-    ] = [
-        updated[targetIndex],
-        updated[index],
-      ];
-
-    /*
-     * Recalculate order.
-     */
-    const reordered =
-      updated.map(
-        (item, itemIndex) => ({
-          ...item,
-          order: itemIndex,
-        }),
-      );
-
-    onChange(reordered);
-
-    /*
-     * Move accordion state with project.
-     */
-    setOpenIndexes(
-      (previous) => {
-        const next =
-          new Set<number>();
-
-        previous.forEach(
-          (openIndex) => {
-            if (
-              openIndex ===
-              index
-            ) {
-              next.add(
-                targetIndex,
-              );
-            } else if (
-              openIndex ===
-              targetIndex
-            ) {
-              next.add(
-                index,
-              );
-            } else {
-              next.add(
-                openIndex,
-              );
-            }
-          },
-        );
-
-        return next;
-      },
-    );
-  }
-
-  /*
-   * OPEN / CLOSE
-   */
-  function toggleItem(
-    index: number,
-  ) {
-    setOpenIndexes(
-      (previous) => {
-        const next =
-          new Set(previous);
-
-        if (
-          next.has(index)
-        ) {
-          next.delete(index);
-        } else {
-          next.add(index);
-        }
-
-        return next;
-      },
-    );
-  }
-
-  function expandAll() {
-    setOpenIndexes(
-      new Set(
-        items.map(
-          (_, index) =>
-            index,
-        ),
-      ),
-    );
-  }
-
-  function collapseAll() {
-    setOpenIndexes(
-      new Set(),
-    );
-  }
-
-  /*
-   * FIELD RENDERER
-   */
-  function renderField(
-    item: any,
-    field: Field,
-    index: number,
-  ) {
-    const value =
-      item[field.key];
-
-    /*
-     * CHECKBOX
-     */
-    if (
-      field.type ===
-      "checkbox"
-    ) {
-      return (
-        <label className="admin-checkbox">
-          <input
-            type="checkbox"
-            checked={Boolean(
-              value,
-            )}
-            onChange={(
-              event,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                event.target
-                  .checked,
-              )
-            }
-          />
-
-          <span>
-            {field.label}
-          </span>
-        </label>
-      );
-    }
-
-    /*
-     * TEXTAREA
-     */
-    if (
-      field.type ===
-      "textarea"
-    ) {
-      return (
-        <div
-          className={`field ${field.full
-              ? "full"
-              : ""
-            }`}
-        >
-          <label>
-            {field.label}
-          </label>
-
-          <textarea
-            value={
-              value || ""
-            }
-            onChange={(
-              event,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                event.target
-                  .value,
-              )
-            }
-          />
-        </div>
-      );
-    }
-
-    /*
-     * MULTILINE ARRAY
-     */
-    if (
-      field.type ===
-      "lines"
-    ) {
-      return (
-        <div
-          className={`field ${field.full
-              ? "full"
-              : ""
-            }`}
-        >
-          <label>
-            {field.label}
-          </label>
-
-          <textarea
-            value={
-              Array.isArray(
-                value,
-              )
-                ? value.join(
-                  "\n",
-                )
-                : ""
-            }
-            placeholder={
-              "One item per line"
-            }
-            onChange={(
-              event,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                event.target.value.split(
-                  "\n",
-                ),
-              )
-            }
-          />
-        </div>
-      );
-    }
-
-    /*
-     * COMMA-SEPARATED ARRAY
-     */
-    if (
-      field.type === "csv"
-    ) {
-      return (
-        <div
-          className={`field ${field.full
-              ? "full"
-              : ""
-            }`}
-        >
-          <label>
-            {field.label}
-          </label>
-
-          <input
-            value={
-              Array.isArray(
-                value,
-              )
-                ? value.join(
-                  ", ",
-                )
-                : ""
-            }
-            placeholder="React, Next.js, MongoDB"
-            onChange={(
-              event,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                event.target.value
-                  .split(",")
-                  .map(
-                    (entry) =>
-                      entry.trim(),
-                  )
-                  .filter(
-                    Boolean,
-                  ),
-              )
-            }
-          />
-        </div>
-      );
-    }
-
-    /*
-     * IMAGE
-     */
-    if (
-      field.type ===
-      "image"
-    ) {
-      return (
-        <div
-          className={`field ${field.full
-              ? "full"
-              : ""
-            }`}
-        >
-          <label>
-            {field.label}
-          </label>
-
-          <ImageUploader
-            value={
-              value || ""
-            }
-            onChange={(
-              newValue,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                newValue,
-              )
-            }
-          />
-        </div>
-      );
-    }
-
-    /*
-     * RICH TEXT / BLOG
-     */
-    if (
-      field.type ===
-      "richtext"
-    ) {
-      return (
-        <div
-          className={`field ${field.full
-              ? "full"
-              : ""
-            }`}
-        >
-          <label>
-            {field.label}
-          </label>
-
-          <RichTextEditor
-            value={
-              value || ""
-            }
-            onChange={(
-              newValue,
-            ) =>
-              updateItem(
-                index,
-                field.key,
-                newValue,
-              )
-            }
-          />
-        </div>
-      );
-    }
-
-    /*
-     * NORMAL INPUT
-     */
-    return (
-      <div
-        className={`field ${field.full
-            ? "full"
-            : ""
-          }`}
-      >
-        <label>
-          {field.label}
-        </label>
-
-        <input
-          value={
-            value ?? ""
-          }
-          onChange={(
-            event,
-          ) =>
-            updateItem(
-              index,
-              field.key,
-              event.target
-                .value,
-            )
-          }
-        />
+  function renderField(item: any, field: Field, index: number) {
+    const value = item[field.key];
+    const id = `f-${item.id}-${field.key}`;
+    const wrap = (control: React.ReactNode) => (
+      <div className={`cms-field ${field.full ? "is-full" : ""}`} key={field.key}>
+        <label htmlFor={id}>{field.label}</label>
+        {control}
+        {field.hint && <small className="cms-hint">{field.hint}</small>}
       </div>
     );
+
+    switch (field.type) {
+      case "checkbox":
+        return (
+          <label className="cms-switch" key={field.key}>
+            <input type="checkbox" checked={Boolean(value)} onChange={e => update(index, field.key, e.target.checked)} />
+            <span className="cms-switch-track" />
+            <span>{field.label}</span>
+          </label>
+        );
+      case "textarea":
+        return wrap(<textarea id={id} className="cms-input" value={value || ""} placeholder={field.placeholder} onChange={e => update(index, field.key, e.target.value)} rows={3} />);
+      case "lines":
+        return wrap(
+          <textarea
+            id={id}
+            className="cms-input"
+            rows={4}
+            value={Array.isArray(value) ? value.join("\n") : ""}
+            placeholder={field.placeholder || "One point per line"}
+            onChange={e => update(index, field.key, e.target.value.split("\n"))}
+          />
+        );
+      case "csv":
+        return wrap(<TagInput value={Array.isArray(value) ? value : []} onChange={v => update(index, field.key, v)} placeholder={field.placeholder} />);
+      case "image":
+        return wrap(<ImageUploader value={value} onChange={url => update(index, field.key, url)} />);
+      case "richtext":
+        return wrap(<RichTextEditor value={value || ""} onChange={html => update(index, field.key, html)} />);
+      default:
+        return wrap(
+          <input id={id} className="cms-input" type={field.type === "url" ? "url" : "text"} value={value || ""} placeholder={field.placeholder} onChange={e => update(index, field.key, e.target.value)} />
+        );
+    }
   }
 
   return (
-    <div className="array-editor">
-      {/* TOP TOOLBAR */}
-
-      <div className="array-editor-top">
+    <section className="cms-array">
+      <div className="cms-array-head">
         <div>
-          <h3>
-            {title}
-          </h3>
-
-          <small>
-            {items.length}{" "}
-            {items.length ===
-              1
-              ? "entry"
-              : "entries"}
-          </small>
+          <h3>{items.length} {items.length === 1 ? title.toLowerCase() : `${title.toLowerCase()} entries`}</h3>
+          {description && <p>{description}</p>}
         </div>
-
-        <div className="array-editor-top-actions">
-          {collapsible &&
-            items.length >
-            0 && (
-              <>
-                <button
-                  type="button"
-                  className="admin-secondary-button"
-                  onClick={
-                    expandAll
-                  }
-                >
-                  Expand all
-                </button>
-
-                <button
-                  type="button"
-                  className="admin-secondary-button"
-                  onClick={
-                    collapseAll
-                  }
-                >
-                  Collapse all
-                </button>
-              </>
-            )}
-
-          <button
-            type="button"
-            className="admin-add-button"
-            onClick={
-              addItem
-            }
-          >
-            + Add {title}
+        <div className="cms-array-actions">
+          {items.length > 1 && (
+            <button type="button" className="cms-btn cms-btn--ghost" onClick={() => setOpen(open.size ? new Set() : new Set(items.map(i => i.id)))}>
+              {open.size ? "Collapse all" : "Expand all"}
+            </button>
+          )}
+          <button type="button" className="cms-btn cms-btn--primary" onClick={add}>
+            <Icon name="plus" size={16} /> Add {title.toLowerCase()}
           </button>
         </div>
       </div>
 
-      {/* ITEMS */}
-
-      <div className="array-editor-items">
-        {items.map(
-          (item, index) => {
-            const isOpen =
-              !collapsible ||
-              openIndexes.has(
-                index,
-              );
-
-            const itemLabel =
-              item[labelKey] ||
-              `Untitled ${title}`;
-
+      {items.length === 0 ? (
+        <button type="button" className="cms-empty" onClick={add}>
+          <Icon name="plus" size={22} />
+          <strong>No {title.toLowerCase()} entries yet</strong>
+          <span>Click to add the first one.</span>
+        </button>
+      ) : (
+        <ol className="cms-items">
+          {items.map((item, index) => {
+            const isOpen = open.has(item.id);
+            const subtitle = subtitleKeys.map(k => item[k]).filter(Boolean).join(" · ");
             return (
-              <article
-                className={`admin-array-item ${collapsible
-                    ? "collapsible"
-                    : ""
-                  } ${isOpen
-                    ? "is-open"
-                    : ""
-                  }`}
-                key={
-                  item.id ||
-                  item._id ||
-                  index
-                }
-              >
-                {/* ACCORDION HEADER */}
-
-                <div className="admin-array-header">
-                  {collapsible ? (
-                    <button
-                      type="button"
-                      className="admin-accordion-toggle"
-                      onClick={() =>
-                        toggleItem(
-                          index,
-                        )
-                      }
-                      aria-expanded={
-                        isOpen
-                      }
-                    >
-                      <span className="admin-accordion-index">
-                        {String(
-                          index +
-                          1,
-                        ).padStart(
-                          2,
-                          "0",
-                        )}
-                      </span>
-
-                      <span className="admin-accordion-info">
-                        <strong>
-                          {
-                            itemLabel
-                          }
-                        </strong>
-
-                        <small>
-                          {item.category ||
-                            item.organization ||
-                            item.institution ||
-                            ""}
-                        </small>
-                      </span>
-
-                      <span className="admin-project-badges">
-                        {item.featured && (
-                          <span className="admin-badge featured">
-                            Featured
-                          </span>
-                        )}
-
-                        {item.visible ===
-                          false && (
-                            <span className="admin-badge hidden">
-                              Hidden
-                            </span>
-                          )}
-                      </span>
-
-                      <span className="admin-accordion-arrow">
-                        ↓
-                      </span>
+              <li key={item.id} id={`item-${item.id}`} className={`cms-item ${isOpen ? "is-open" : ""} ${item.visible === false ? "is-hidden" : ""}`}>
+                <div className="cms-item-head">
+                  <button type="button" className="cms-item-toggle" onClick={() => toggle(item.id)} aria-expanded={isOpen}>
+                    <span className="cms-item-index">{String(index + 1).padStart(2, "0")}</span>
+                    {item.imageUrl && <img src={item.imageUrl} alt="" className="cms-item-thumb" />}
+                    <span className="cms-item-text">
+                      <strong>{item[labelKey] || `Untitled ${title.toLowerCase()}`}</strong>
+                      {subtitle && <small>{subtitle}</small>}
+                    </span>
+                    <span className="cms-item-badges">
+                      {item.featured && <span className="cms-pill cms-pill--accent">Featured</span>}
+                      {item.current && <span className="cms-pill">Current</span>}
+                      {item.visible === false && <span className="cms-pill cms-pill--muted">Hidden</span>}
+                    </span>
+                    <Icon name="chevron" size={16} className="cms-item-chevron" />
+                  </button>
+                  <div className="cms-item-tools">
+                    <button type="button" title="Move up" disabled={index === 0} onClick={() => move(index, -1)}><Icon name="up" size={15} /></button>
+                    <button type="button" title="Move down" disabled={index === items.length - 1} onClick={() => move(index, 1)}><Icon name="down" size={15} /></button>
+                    <button type="button" title={item.visible === false ? "Show on site" : "Hide from site"} onClick={() => update(index, "visible", item.visible === false)}>
+                      <Icon name={item.visible === false ? "eyeOff" : "eye"} size={15} />
                     </button>
-                  ) : (
-                    <div className="admin-standard-item-title">
-                      <span>
-                        {String(
-                          index +
-                          1,
-                        ).padStart(
-                          2,
-                          "0",
-                        )}
-                      </span>
-
-                      <strong>
-                        {
-                          itemLabel
-                        }
-                      </strong>
-                    </div>
-                  )}
-
-                  {/* ITEM ACTIONS */}
-
-                  <div className="admin-item-actions">
-                    <button
-                      type="button"
-                      title="Move up"
-                      disabled={
-                        index === 0
-                      }
-                      onClick={() =>
-                        moveItem(
-                          index,
-                          "up",
-                        )
-                      }
-                    >
-                      ↑
-                    </button>
-
-                    <button
-                      type="button"
-                      title="Move down"
-                      disabled={
-                        index ===
-                        items.length -
-                        1
-                      }
-                      onClick={() =>
-                        moveItem(
-                          index,
-                          "down",
-                        )
-                      }
-                    >
-                      ↓
-                    </button>
-
-                    {"visible" in
-                      item && (
-                        <button
-                          type="button"
-                          className={
-                            item.visible ===
-                              false
-                              ? "visibility-off"
-                              : ""
-                          }
-                          title={
-                            item.visible ===
-                              false
-                              ? "Show item"
-                              : "Hide item"
-                          }
-                          onClick={() =>
-                            updateItem(
-                              index,
-                              "visible",
-                              item.visible ===
-                              false,
-                            )
-                          }
-                        >
-                          {item.visible ===
-                            false
-                            ? "○"
-                            : "●"}
-                        </button>
-                      )}
-
-                    <button
-                      type="button"
-                      className="delete"
-                      title="Delete"
-                      onClick={() =>
-                        deleteItem(
-                          index,
-                        )
-                      }
-                    >
-                      ×
-                    </button>
+                    <button type="button" title="Duplicate" onClick={() => duplicate(index)}><Icon name="copy" size={15} /></button>
+                    <button type="button" title="Delete" className="danger" onClick={() => remove(index)}><Icon name="trash" size={15} /></button>
                   </div>
                 </div>
-
-                {/* CONTENT */}
-
-                {isOpen && (
-                  <div className="admin-array-body">
-                    <div className="field-grid">
-                      {fields.map((field) => (
-                        <div
-                          key={field.key}
-                          className={
-                            field.full
-                              ? "field-grid-item full"
-                              : "field-grid-item"
-                          }
-                        >
-                          {renderField(
-                            item,
-                            field,
-                            index
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </article>
+                {isOpen && <div className="cms-item-body cms-grid">{fields.map(field => renderField(item, field, index))}</div>}
+              </li>
             );
-          },
-        )}
-
-        {items.length ===
-          0 && (
-            <div className="admin-empty-state">
-              <p>
-                No {title.toLowerCase()}{" "}
-                entries yet.
-              </p>
-
-              <button
-                type="button"
-                className="admin-add-button"
-                onClick={
-                  addItem
-                }
-              >
-                + Add {title}
-              </button>
-            </div>
-          )}
-      </div>
-    </div>
+          })}
+        </ol>
+      )}
+    </section>
   );
 }
