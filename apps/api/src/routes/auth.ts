@@ -19,11 +19,11 @@ router.post("/login", loginLimiter, async (req, res) => {
   const secret = process.env.JWT_SECRET;
   if (!secret) return res.status(500).json({ error: "Server authentication is not configured" });
   const token = jwt.sign({}, secret, { subject: admin.id, expiresIn: "7d" });
-  const production = process.env.NODE_ENV === "production";
+  // The website proxies /backend/* to this API, so this is a first-party cookie on the site.
   res.cookie("admin_token", token, {
     httpOnly: true,
-    secure: production,
-    sameSite: production ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/"
   });
@@ -31,8 +31,7 @@ router.post("/login", loginLimiter, async (req, res) => {
 });
 
 router.post("/logout", (_req, res) => {
-  const production = process.env.NODE_ENV === "production";
-  res.clearCookie("admin_token", { httpOnly: true, secure: production, sameSite: production ? "none" : "lax", path: "/" });
+  res.clearCookie("admin_token", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/" });
   res.json({ ok: true });
 });
 

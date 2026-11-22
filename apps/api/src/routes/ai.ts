@@ -3,6 +3,8 @@ import rateLimit from "express-rate-limit";
 import OpenAI from "openai";
 import { z } from "zod";
 import { Portfolio } from "../models/Portfolio.js";
+import { Post, publicPostFilter } from "../models/Post.js";
+import { publicPortfolio } from "../lib/content.js";
 
 const router = Router();
 const limiter = rateLimit({ windowMs: 60 * 1000, limit: 12, standardHeaders: true, legacyHeaders: false });
@@ -15,8 +17,11 @@ router.post("/chat", limiter, async (req, res) => {
   const model = process.env.OPENAI_MODEL;
   if (!apiKey || !model) return res.status(503).json({ error: "AI assistant is not configured yet" });
 
-  const portfolio = (await Portfolio.findOne({ key: "main" }).lean()) as Record<string, any> | null;
-  if (!portfolio) return res.status(404).json({ error: "Portfolio data unavailable" });
+  const raw = (await Portfolio.findOne({ key: "main" }).lean()) as Record<string, any> | null;
+  if (!raw) return res.status(404).json({ error: "Portfolio data unavailable" });
+  // Hidden items are stripped so the assistant can never reveal them.
+  const portfolio = publicPortfolio(raw);
+  const posts = await Post.find(publicPostFilter()).select("title slug excerpt tags publishedAt").sort({ publishedAt: -1 }).limit(25).lean();
 
   const publicContext = {
     profile: portfolio.profile,
@@ -28,7 +33,8 @@ router.post("/chat", limiter, async (req, res) => {
     achievements: portfolio.achievements,
     leadership: portfolio.leadership,
     languages: portfolio.languages,
-    socialLinks: portfolio.socialLinks
+    socialLinks: portfolio.socialLinks,
+    blogPosts: posts.map((p: any) => ({ title: p.title, url: `/blog/${p.slug}`, excerpt: p.excerpt, tags: p.tags, publishedAt: p.publishedAt }))
   };
 
   const client = new OpenAI({ apiKey });

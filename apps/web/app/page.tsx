@@ -1,8 +1,8 @@
-import { getPortfolio } from "@/lib/api";
+import { getPortfolio, getPosts } from "@/lib/api";
 import PortfolioSite from "@/components/PortfolioSite";
 import type { Metadata } from "next";
 
-const SITE_URL = "https://www.showaibbinnasir.site";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const portfolio = await getPortfolio();
@@ -25,10 +25,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const revalidate = 60;
+
 export default async function Home() {
-  const portfolio = await getPortfolio();
+  const [portfolio, postList] = await Promise.all([getPortfolio(), getPosts({ limit: 3 })]);
   if (!portfolio) {
     return <main className="offline"><p>Portfolio API is not available yet.</p><p className="muted">Start the Express server and seed MongoDB, then refresh.</p></main>;
   }
-  return <PortfolioSite data={portfolio} />;
+  return <PortfolioSite data={portfolio} posts={postList?.posts || []} />;
 }

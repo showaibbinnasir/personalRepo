@@ -2,8 +2,9 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { getPortfolio } from "@/lib/api";
+import ScrollEffects from "@/components/ScrollEffects";
 
-const SITE_URL = "https://www.showaibbinnasir.site";
+import { SITE_URL } from "@/lib/site";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   keywords: ["Showaib Bin Nasir", "Robotics engineer", "Artificial intelligence", "AI portfolio", "Robotics and AI graduate", "Machine learning", "Intelligent systems"],
   authors: [{ name: "Showaib Bin Nasir", url: SITE_URL }],
   creator: "Showaib Bin Nasir",
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: { "application/rss+xml": `${SITE_URL}/blog/feed.xml` } },
   robots: {
     index: true,
     follow: true,
@@ -81,9 +82,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         {personLd && (
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd).replace(/</g, "\\u003c") }}
           />
         )}
+        <ScrollEffects />
         {children}
       </body>
     </html>

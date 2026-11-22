@@ -113,8 +113,10 @@ const portfolioSchema = new mongoose.Schema(
     socialLinks: { type: [socialSchema], default: [] },
     sectionOrder: {
       type: [String],
-      default: ["about", "education", "experience", "leadership", "projects", "skills", "certifications", "achievements", "ask-ai", "contact"]
+      default: ["about", "education", "experience", "leadership", "projects", "blog", "skills", "languages", "certifications", "ask-ai"]
     },
+    /** Homepage sections switched off in the CMS. */
+    hiddenSections: { type: [String], default: [] },
     siteSettings: {
       accent: { type: String, default: "#A71919" },
       background: { type: String, default: "#080606" },

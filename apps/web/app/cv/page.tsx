@@ -1,6 +1,16 @@
 import { getPortfolio } from "@/lib/api";
 import type { CSSProperties } from "react";
 import styles from "./cv.module.css";
+import { DEFAULT_RESUME_PATH } from "@/lib/site";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Curriculum Vitae",
+  description: "Curriculum vitae of Mohammad Showaib Bin Nasir — education, experience, leadership, skills and credentials.",
+  alternates: { canonical: "/cv" }
+};
 
 const sortVisible = <T extends { visible?: boolean; order?: number }>(
   items: T[] = []
@@ -50,8 +60,7 @@ export default async function CVPage() {
   } as CSSProperties;
 
   const resumeUrl =
-    profile.resumeUrl?.trim() ||
-    "/cv/Mohammad_Showaib_bin_Nasir_CV.pdf";
+    profile.resumeUrl?.trim() || DEFAULT_RESUME_PATH;
 
   const experienceItems = sortVisible(experiences);
   const educationItems = sortVisible(education);
@@ -85,7 +94,7 @@ export default async function CVPage() {
       <header className={styles.hero}>
         <div className={styles.heroMeta}>
           <span>CURRICULUM VITAE</span>
-          <span>{profile.location || "London, United Kingdom"}</span>
+          {profile.location && <span>{profile.location}</span>}
         </div>
 
         <h1>

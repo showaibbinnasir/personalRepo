@@ -55,7 +55,8 @@ const seed = {
     { id: "social-linkedin", label: "LinkedIn", url: "https://linkedin.com/in/showaib-bin-nasir-7381491a3", visible: true, order: 0 },
     { id: "social-github", label: "GitHub", url: "https://github.com/showaibbinnasir", visible: true, order: 1 }
   ],
-  sectionOrder: ["about", "education", "experience", "leadership", "projects", "skills", "languages", "certifications", "achievements", "ask-ai", "contact"],
+  sectionOrder: ["about", "education", "experience", "leadership", "projects", "blog", "skills", "languages", "certifications", "ask-ai"],
+  hiddenSections: [],
   siteSettings: { accent: "#A71919", background: "#080606", foreground: "#F4F1EC", muted: "#A9A4A0", footerNote: "Designed around clarity, engineering and intelligent systems." }
 };
 

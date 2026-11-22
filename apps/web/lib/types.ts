@@ -25,5 +25,37 @@ export type Portfolio = {
   languages: Language[];
   socialLinks: SocialLink[];
   sectionOrder: string[];
+  hiddenSections?: string[];
+  updatedAt?: string;
   siteSettings: { accent: string; background: string; foreground: string; muted: string; footerNote: string };
+};
+
+export type BlogPostSummary = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  coverImageUrl: string;
+  coverImageAlt: string;
+  tags: string[];
+  status: "draft" | "published";
+  publishedAt: string | null;
+  featured: boolean;
+  seoTitle: string;
+  seoDescription: string;
+  readingMinutes: number;
+  wordCount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BlogPost = BlogPostSummary & { content: string };
+
+export type PostList = { posts: BlogPostSummary[]; total: number; page: number; pages: number; tags: string[] };
+
+export type PostDetail = {
+  post: BlogPost;
+  prev: Pick<BlogPostSummary, "title" | "slug"> | null;
+  next: Pick<BlogPostSummary, "title" | "slug"> | null;
+  related: BlogPostSummary[];
 };
