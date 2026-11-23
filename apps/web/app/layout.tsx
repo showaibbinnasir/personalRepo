@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { getPortfolio } from "@/lib/api";
 import ScrollEffects from "@/components/ScrollEffects";
+import SpaceBackground from "@/components/SpaceBackground";
 
 import { SITE_URL } from "@/lib/site";
 
@@ -85,6 +86,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd).replace(/</g, "\\u003c") }}
           />
         )}
+        <SpaceBackground />
         <ScrollEffects />
         {children}
       </body>

@@ -5,6 +5,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { useState } from "react";
 import ChatWidget from "./ChatWidget";
 import BlogCard from "./BlogCard";
+import MobileMenu from "./MobileMenu";
 import { DEFAULT_RESUME_PATH } from "@/lib/site";
 
 const PROJECTS_PER_PAGE = 6;
@@ -414,6 +415,17 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
           <a href="#contact">Contact</a>
         </nav>
         <a className="pill-link" href={`mailto:${profile.email}`}>CONTACT NOW</a>
+        <MobileMenu
+          email={profile.email}
+          links={[
+            ...(navHas("projects") ? [{ href: "#work", label: "Work" }] : []),
+            ...(navHas("about") ? [{ href: "#about", label: "About" }] : []),
+            ...(navHas("experience") ? [{ href: "#experience", label: "Experience" }] : []),
+            ...(navHas("blog") ? [{ href: "/blog", label: "Blog" }] : []),
+            { href: "/cv", label: "CV" },
+            { href: "#contact", label: "Contact" }
+          ]}
+        />
       </header>
 
       <section id="top" className="hero">
