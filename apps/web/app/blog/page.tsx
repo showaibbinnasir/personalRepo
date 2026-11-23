@@ -96,7 +96,7 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
         {lead && <BlogCard post={lead} large />}
 
         {rest.length > 0 && (
-          <div className="blog-grid">
+          <div className="card-grid blog-grid">
             {rest.map((post, i) => (
               <BlogCard key={post._id} post={post} index={(pageNum - 1) * PER_PAGE + i + (showLead ? 1 : 0)} />
             ))}

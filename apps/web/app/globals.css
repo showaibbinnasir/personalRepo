@@ -335,86 +335,6 @@ main {
     margin-bottom: 60px
 }
 
-.project-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px
-}
-
-.project-card {
-    background: #0e0b0b;
-    border: 1px solid var(--line);
-    overflow: hidden
-}
-
-.project-card.featured {
-    grid-column: span 2
-}
-
-.project-card>img,
-.project-image-placeholder {
-    width: 100%;
-    aspect-ratio: 16/10;
-    object-fit: cover
-}
-
-.project-image-placeholder {
-    display: grid;
-    place-content: center;
-    background: linear-gradient(145deg, #171111, #0a0707);
-    color: #5b5351;
-    letter-spacing: .2em;
-    font-size: 11px
-}
-
-.project-copy {
-    padding: 26px
-}
-
-.project-copy small {
-    color: var(--muted);
-    letter-spacing: .14em
-}
-
-.project-copy h3 {
-    font-size: clamp(30px, 4vw, 58px);
-    margin: 12px 0;
-    letter-spacing: -.05em
-}
-
-.project-copy p {
-    font-size: 17px;
-    line-height: 1.5;
-    color: #c8c1bc
-}
-
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px
-}
-
-.tags span {
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 8px 11px;
-    font-size: 11px
-}
-
-.project-links {
-    display: flex;
-    gap: 18px;
-    margin-top: 24px;
-    text-transform: uppercase;
-    font-size: 11px;
-    letter-spacing: .14em
-}
-
-.project-links a:hover {
-    color: var(--accent)
-}
-
 .empty-public {
     padding: 56px;
     border: 1px dashed var(--line);
@@ -711,166 +631,6 @@ main {
   margin-bottom: 60px;
 }
 
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-}
-
-.project-card {
-  min-width: 0;
-  overflow: hidden;
-
-  background: #0e0b0b;
-  border: 1px solid var(--line);
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(244, 241, 236, 0.35);
-}
-
-.project-card.featured {
-  grid-column: span 2;
-}
-
-.project-card > img,
-.project-image-placeholder {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-}
-
-.project-card > img {
-  object-fit: cover;
-
-  transition:
-    transform 0.6s ease,
-    filter 0.6s ease;
-}
-
-.project-card:hover > img {
-  transform: scale(1.015);
-}
-
-.project-image-placeholder {
-  display: grid;
-  place-content: center;
-
-  background:
-    linear-gradient(
-      145deg,
-      #171111,
-      #0a0707
-    );
-
-  color: #5b5351;
-
-  font-size: 11px;
-  letter-spacing: 0.2em;
-}
-
-.project-copy {
-  padding: 26px;
-}
-
-.project-copy small {
-  color: var(--muted);
-
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.project-copy h3 {
-  margin: 12px 0;
-
-  font-size: clamp(
-    30px,
-    4vw,
-    58px
-  );
-
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.project-copy p {
-  color: #c8c1bc;
-
-  font-size: 17px;
-  line-height: 1.5;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  margin-top: 18px;
-}
-
-.tags span {
-  padding: 8px 11px;
-
-  border: 1px solid var(--line);
-  border-radius: 999px;
-
-  font-size: 11px;
-}
-
-.project-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-
-  margin-top: 24px;
-
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.project-links a {
-  position: relative;
-  padding-bottom: 4px;
-
-  transition:
-    color 0.2s ease;
-}
-
-.project-links a::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  height: 1px;
-
-  background: currentColor;
-
-  content: "";
-
-  transform: scaleX(0);
-  transform-origin: right;
-
-  transition:
-    transform 0.25s ease;
-}
-
-.project-links a:hover {
-  color: var(--accent);
-}
-
-.project-links a:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
 .empty-public {
   padding: 56px;
 
@@ -882,7 +642,6 @@ main {
   letter-spacing: 0.16em;
   text-align: center;
 }
-
 
 /* ========================================
    PROJECT VIEW MORE + PAGINATION
@@ -899,7 +658,6 @@ main {
 
   gap: 24px;
 }
-
 
 /* VIEW MORE / SHOW LESS */
 
@@ -971,7 +729,6 @@ main {
   .navigation-arrow {
   transform: translateY(-3px);
 }
-
 
 /* ========================================
    PAGINATION
@@ -1073,7 +830,6 @@ main {
   outline-offset: 4px;
 }
 
-
 /* ========================================
    PROJECT COUNT
    ======================================== */
@@ -1085,7 +841,6 @@ main {
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
-
 
 /* ========================================
    CV ACTIONS
@@ -1175,46 +930,32 @@ main {
   outline-offset: 4px;
 }
 
-
 /* ========================================
    PROJECT TABLET
    ======================================== */
 
 @media (max-width: 900px) {
-  .project-grid {
-    grid-template-columns: 1fr;
-  }
+  
 
-  .project-card.featured {
-    grid-column: auto;
-  }
+  
 
   .projects-navigation {
     margin-top: 46px;
   }
 }
 
-
 /* ========================================
    PROJECT MOBILE
    ======================================== */
 
 @media (max-width: 560px) {
-  .project-grid {
-    gap: 18px;
-  }
+  
 
-  .project-copy {
-    padding: 20px 18px;
-  }
+  
 
-  .project-copy h3 {
-    font-size: 34px;
-  }
+  
 
-  .project-copy p {
-    font-size: 15px;
-  }
+  
 
   .projects-navigation {
     margin-top: 38px;
@@ -1308,13 +1049,9 @@ main {
         text-align: left
     }
 
-    .project-grid {
-        grid-template-columns: 1fr
-    }
+    
 
-    .project-card.featured {
-        grid-column: auto
-    }
+    
 
     .skills-grid {
         grid-template-columns: 1fr 1fr
@@ -1368,9 +1105,7 @@ main {
         grid-template-columns: 1fr
     }
 
-    .project-copy {
-        padding: 18px
-    }
+    
 
     .footer {
         padding-top: 70px
@@ -1570,7 +1305,6 @@ main {
         transform: none
     }
 }
-
 
 .cv-page {
     min-height: 100vh;
@@ -2117,147 +1851,6 @@ html[data-scrolled="true"] .topbar {
     padding-top: 56px
 }
 
-.blog-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px
-}
-
-.blog-card--large+.blog-grid {
-    margin-top: 24px
-}
-
-.blog-card {
-    min-width: 0;
-    background: #0e0b0b;
-    border: 1px solid var(--line);
-    transition: transform .4s var(--ease-out), border-color .4s ease
-}
-
-.blog-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(244, 241, 236, .35)
-}
-
-.blog-card-link {
-    display: flex;
-    flex-direction: column;
-    height: 100%
-}
-
-.blog-card-media {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: #140f0f
-}
-
-.blog-card-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(35%);
-    transition: transform 1s var(--ease-out), filter .6s ease
-}
-
-.blog-card:hover .blog-card-media img {
-    transform: scale(1.05);
-    filter: grayscale(0)
-}
-
-.blog-card-placeholder {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-    background: radial-gradient(circle at 75% 25%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 55%), linear-gradient(140deg, #171111, #080606)
-}
-
-.blog-card-placeholder span {
-    font-size: 140px;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(244, 241, 236, .3);
-    transition: transform 1s var(--ease-out)
-}
-
-.blog-card:hover .blog-card-placeholder span {
-    transform: scale(1.1) rotate(-4deg)
-}
-
-.blog-card-copy {
-    padding: 26px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    flex: 1
-}
-
-.blog-card-copy small {
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase
-}
-
-.blog-card-copy h3 {
-    margin: 0;
-    font-size: clamp(24px, 2.2vw, 34px);
-    line-height: 1.02;
-    letter-spacing: -.045em
-}
-
-.blog-card-copy p {
-    margin: 0;
-    color: #c5beb9;
-    line-height: 1.55;
-    font-size: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden
-}
-
-.blog-card-copy .tags {
-    margin-top: auto
-}
-
-.blog-card-cta {
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--accent)
-}
-
-.blog-card--large .blog-card-link {
-    display: grid;
-    grid-template-columns: 1.25fr 1fr
-}
-
-.blog-card--large .blog-card-media {
-    aspect-ratio: auto;
-    min-height: 460px
-}
-
-.blog-card--large .blog-card-copy {
-    padding: clamp(28px, 4vw, 56px);
-    justify-content: flex-end
-}
-
-.blog-card--large .blog-card-copy h3 {
-    font-size: clamp(38px, 4.6vw, 72px);
-    line-height: .95
-}
-
-.blog-card--large .blog-card-copy p {
-    font-size: 18px;
-    -webkit-line-clamp: 4
-}
-
-.blog-card--large .blog-card-copy .tags {
-    margin-top: 0
-}
-
 .blog-pagination {
     margin-top: 60px;
     justify-content: center
@@ -2657,9 +2250,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 @media (max-width: 1100px) {
-    .blog-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr))
-    }
+    
 
     .post-layout.has-toc {
         grid-template-columns: 1fr;
@@ -2674,14 +2265,9 @@ html[data-scrolled="true"] .topbar {
 }
 
 @media (max-width: 900px) {
-    .blog-card--large .blog-card-link {
-        grid-template-columns: 1fr
-    }
+    
 
-    .blog-card--large .blog-card-media {
-        min-height: 0;
-        aspect-ratio: 16 / 10
-    }
+    
 
     .post-cover {
         aspect-ratio: 16 / 10;
@@ -2690,9 +2276,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 @media (max-width: 640px) {
-    .blog-grid {
-        grid-template-columns: 1fr
-    }
+    
 
     .blog-index-head {
         padding: 130px 18px 50px
@@ -2730,5 +2314,466 @@ html[data-scrolled="true"] .topbar {
     .blog-footer {
         flex-direction: column;
         gap: 14px
+    }
+}
+
+/* =====================================================================
+   CARDS — shared system for project and blog cards
+   Compact, technical, "instrument panel" look: hairline borders,
+   monospace metadata, corner brackets and a pointer-following glow.
+   ===================================================================== */
+
+:root {
+    --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --card-bg: #0c0909;
+    --card-line: rgba(244, 241, 236, .09);
+    --card-line-strong: rgba(244, 241, 236, .22)
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px
+}
+
+.pcard,
+.bcard {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background:
+        linear-gradient(180deg, rgba(244, 241, 236, .025), rgba(244, 241, 236, 0) 40%),
+        var(--card-bg);
+    border: 1px solid var(--card-line);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color .35s ease, transform .5s var(--ease-out), box-shadow .5s ease
+}
+
+/* Glow that follows the pointer (position set by ScrollEffects). */
+.pcard::before,
+.bcard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%);
+    opacity: 0;
+    transition: opacity .4s ease
+}
+
+/* Corner brackets, drawn on hover. */
+.pcard::after,
+.bcard::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    z-index: 3;
+    pointer-events: none;
+    background:
+        linear-gradient(var(--accent), var(--accent)) top left / 14px 1px,
+        linear-gradient(var(--accent), var(--accent)) top left / 1px 14px,
+        linear-gradient(var(--accent), var(--accent)) bottom right / 14px 1px,
+        linear-gradient(var(--accent), var(--accent)) bottom right / 1px 14px;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.03);
+    transition: opacity .35s ease, transform .5s var(--ease-out)
+}
+
+.pcard:hover,
+.bcard:hover,
+.pcard:focus-within,
+.bcard:focus-within {
+    border-color: var(--card-line-strong);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 50px -24px color-mix(in srgb, var(--accent) 55%, transparent)
+}
+
+.pcard:hover::before,
+.bcard:hover::before,
+.pcard:hover::after,
+.bcard:hover::after,
+.pcard:focus-within::after,
+.bcard:focus-within::after {
+    opacity: 1;
+    transform: none
+}
+
+.pcard.is-featured {
+    border-top-color: color-mix(in srgb, var(--accent) 70%, transparent)
+}
+
+/* ---------- Media ---------- */
+
+.pcard-media,
+.bcard-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #120d0d;
+    border-bottom: 1px solid var(--card-line)
+}
+
+.pcard-media img,
+.bcard-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(.55) brightness(.82) contrast(1.05);
+    transform: scale(1.001);
+    transition: filter .6s ease, transform 1.1s var(--ease-out)
+}
+
+.pcard:hover .pcard-media img,
+.bcard:hover .bcard-media img {
+    filter: none;
+    transform: scale(1.045)
+}
+
+/* Faint scanlines + bottom fade over the image for a "display" feel. */
+.pcard-media::after,
+.bcard-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, .16) 0 1px, transparent 1px 3px),
+        linear-gradient(180deg, rgba(8, 6, 6, .35), transparent 30%, transparent 65%, rgba(8, 6, 6, .55));
+    opacity: .55;
+    transition: opacity .5s ease
+}
+
+.pcard:hover .pcard-media::after,
+.bcard:hover .bcard-media::after {
+    opacity: .25
+}
+
+.card-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 46%),
+        linear-gradient(rgba(244, 241, 236, .05) 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(90deg, rgba(244, 241, 236, .05) 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(145deg, #1a1212, #0a0707)
+}
+
+.card-placeholder span {
+    font-family: var(--mono);
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 700;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(244, 241, 236, .32);
+    transition: transform .9s var(--ease-out)
+}
+
+.pcard:hover .card-placeholder span,
+.bcard:hover .card-placeholder span {
+    transform: scale(1.08)
+}
+
+.card-index,
+.card-badge {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: .12em;
+    text-transform: uppercase
+}
+
+.card-index {
+    left: 12px;
+    padding: 6px 7px;
+    color: var(--fg);
+    background: rgba(8, 6, 6, .6);
+    border: 1px solid var(--card-line);
+    border-radius: 3px;
+    backdrop-filter: blur(6px)
+}
+
+.card-badge {
+    right: 12px;
+    max-width: 60%;
+    padding: 6px 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--fg);
+    background: rgba(8, 6, 6, .6);
+    border: 1px solid var(--card-line-strong);
+    border-radius: 3px;
+    backdrop-filter: blur(6px)
+}
+
+.card-badge::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin: 0 6px 1px 0;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    vertical-align: middle
+}
+
+/* ---------- Body ---------- */
+
+.pcard-body,
+.bcard-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px 16px
+}
+
+.card-flag {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent)
+}
+
+.card-flag::before {
+    content: "◆ "
+}
+
+.pcard h3,
+.bcard h3 {
+    margin: 0;
+    font-size: clamp(18px, 1.45vw, 22px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.025em;
+    text-transform: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden
+}
+
+.pcard h3 a,
+.bcard h3 a {
+    transition: color .3s ease
+}
+
+.pcard:hover h3 a,
+.bcard:hover h3 a {
+    color: #fff
+}
+
+/* Makes the whole card clickable while keeping other links usable. */
+.card-stretch::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1
+}
+
+.pcard-body p,
+.bcard-body p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #b7afa9;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden
+}
+
+.card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted)
+}
+
+.card-meta span[aria-hidden] {
+    color: var(--accent)
+}
+
+.card-meta .card-flag {
+    margin-left: auto
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+.chips li {
+    padding: 4px 7px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.2;
+    letter-spacing: .02em;
+    color: #cfc8c2;
+    background: rgba(244, 241, 236, .035);
+    border: 1px solid var(--card-line);
+    border-radius: 3px
+}
+
+.chips .chips-more {
+    color: var(--muted);
+    border-style: dashed
+}
+
+.card-links {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--card-line);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted)
+}
+
+.card-links a,
+.card-links span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .25s ease
+}
+
+.card-links i {
+    font-style: normal;
+    display: inline-block;
+    transition: transform .35s var(--ease-out)
+}
+
+.card-links a:hover,
+.bcard:hover .card-links span {
+    color: var(--fg)
+}
+
+.card-links a:hover i,
+.bcard:hover .card-links span i {
+    transform: translateX(3px)
+}
+
+.card-links a[target="_blank"]:hover i {
+    transform: translate(2px, -2px)
+}
+
+/* ---------- Blog lead card (first post on /blog) ---------- */
+
+.bcard--lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    margin-bottom: 18px
+}
+
+.bcard--lead .bcard-media {
+    aspect-ratio: auto;
+    min-height: 300px;
+    max-height: 380px;
+    border-bottom: 0;
+    border-right: 1px solid var(--card-line)
+}
+
+.bcard--lead .bcard-body {
+    justify-content: center;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 40px)
+}
+
+.bcard--lead h3 {
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.1;
+    -webkit-line-clamp: 3
+}
+
+.bcard--lead .bcard-body p {
+    font-size: 15.5px;
+    -webkit-line-clamp: 3
+}
+
+.bcard--lead .card-links {
+    margin-top: 6px
+}
+
+/* ---------- Section spacing ---------- */
+
+.projects-section .card-grid,
+.home-blog .card-grid {
+    margin-top: 8px
+}
+
+.related-posts .card-grid {
+    margin-top: 32px
+}
+
+@media (max-width: 1100px) {
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+}
+
+@media (max-width: 760px) {
+    .card-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px
+    }
+
+    .bcard--lead {
+        grid-template-columns: minmax(0, 1fr)
+    }
+
+    .bcard--lead .bcard-media {
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--card-line)
+    }
+
+    .pcard-body,
+    .bcard-body {
+        padding: 16px 16px 14px
+    }
+
+    .pcard-media,
+    .bcard-media {
+        aspect-ratio: 2 / 1
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .pcard:hover,
+    .bcard:hover {
+        transform: none
     }
 }
