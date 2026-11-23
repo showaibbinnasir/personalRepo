@@ -203,27 +203,42 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
 
         {projects.length > 0 ? (
           <>
-            <div className="project-grid">
+            <div className="card-grid project-grid">
               {displayedProjects.map((project, index) => {
                 const projectNumber = showAllProjects ? projectStartIndex + index + 1 : index + 1;
                 return (
-                  <article className={`project-card ${project.featured ? "featured" : ""}`} key={project.id}>
-                    {project.imageUrl ? (
-                      <img src={project.imageUrl} alt={project.title} loading="lazy" />
-                    ) : (
-                      <div className="project-image-placeholder">PROJECT IMAGE</div>
-                    )}
-                    <div className="project-copy">
-                      <small>{String(projectNumber).padStart(2, "0")} / {project.category || "PROJECT"}</small>
-                      <h3>{project.title}</h3>
-                      <p>{project.summary}</p>
-                      <div className="tags">
-                        {project.tech.map(technology => <span key={technology}>{technology}</span>)}
-                      </div>
-                      <div className="project-links">
-                        {project.description && <a href={`/projects/${encodeURIComponent(project.id)}`}>Case study ↗</a>}
-                        {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">Live ↗</a>}
-                        {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer">Code ↗</a>}
+                  <article className={`pcard ${project.featured ? "is-featured" : ""}`} key={project.id}>
+                    <div className="pcard-media">
+                      {project.imageUrl ? (
+                        <img src={project.imageUrl} alt={project.title} loading="lazy" />
+                      ) : (
+                        <div className="card-placeholder" aria-hidden="true">
+                          <span>{project.title.slice(0, 2)}</span>
+                        </div>
+                      )}
+                      <span className="card-index">P/{String(projectNumber).padStart(2, "0")}</span>
+                      {project.category && <span className="card-badge">{project.category}</span>}
+                    </div>
+                    <div className="pcard-body">
+                      {project.featured && <span className="card-flag">Featured</span>}
+                      <h3>
+                        {project.description ? (
+                          <a className="card-stretch" href={`/projects/${encodeURIComponent(project.id)}`}>{project.title}</a>
+                        ) : (
+                          project.title
+                        )}
+                      </h3>
+                      {project.summary && <p>{project.summary}</p>}
+                      {project.tech.length > 0 && (
+                        <ul className="chips" aria-label="Technologies">
+                          {project.tech.slice(0, 4).map(technology => <li key={technology}>{technology}</li>)}
+                          {project.tech.length > 4 && <li className="chips-more">+{project.tech.length - 4}</li>}
+                        </ul>
+                      )}
+                      <div className="card-links">
+                        {project.description && <a href={`/projects/${encodeURIComponent(project.id)}`}>Case study <i aria-hidden="true">→</i></a>}
+                        {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">Live <i aria-hidden="true">↗</i></a>}
+                        {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer">Code <i aria-hidden="true">↗</i></a>}
                       </div>
                     </div>
                   </article>
@@ -294,7 +309,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
               </div>
             </div>
           </div>
-          <div className="blog-grid home-blog-grid">
+          <div className="card-grid home-blog-grid">
             {posts.slice(0, 3).map((post, i) => <BlogCard key={post._id} post={post} index={i} />)}
           </div>
         </section>

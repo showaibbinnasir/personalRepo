@@ -190,7 +190,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
       {related.length > 0 && (
         <section className="section related-posts">
           <div className="section-kicker"><span>//</span><span>Keep reading</span><span>Related</span></div>
-          <div className="blog-grid">
+          <div className="card-grid blog-grid">
             {related.map(p => <BlogCard key={p._id} post={p} />)}
           </div>
         </section>

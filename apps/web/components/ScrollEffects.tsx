@@ -21,12 +21,12 @@ const REVEAL_SELECTOR = [
   ".section .lead",
   ".section .mini-links",
   ".row",
-  ".project-card",
+  ".pcard",
   ".skills-grid article",
   ".language-list > div",
   ".credential",
   ".large-cta",
-  ".blog-card",
+  ".bcard",
   ".projects-navigation",
   ".footer > *",
   ".post-header > *",
@@ -108,6 +108,19 @@ export default function ScrollEffects() {
         mo.disconnect();
         root.classList.remove("reveal-ready");
       });
+    }
+
+    /* ---------- Card spotlight: a soft glow that follows the pointer ---------- */
+    if (!reduceMotion && window.matchMedia("(hover: hover)").matches) {
+      const onMove = (e: PointerEvent) => {
+        const card = (e.target as Element | null)?.closest?.<HTMLElement>(".pcard, .bcard");
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      };
+      document.addEventListener("pointermove", onMove, { passive: true });
+      cleanups.push(() => document.removeEventListener("pointermove", onMove));
     }
 
     /* ---------- Progress bar, parallax, header ---------- */
