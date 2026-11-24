@@ -6,6 +6,8 @@ import { useState } from "react";
 import ChatWidget from "./ChatWidget";
 import BlogCard from "./BlogCard";
 import MobileMenu from "./MobileMenu";
+import RobotArmLab from "./RobotArmLab";
+import SkillsExplorer from "./SkillsExplorer";
 import { DEFAULT_RESUME_PATH, hasRichContent, uniqueList } from "@/lib/site";
 
 const PROJECTS_PER_PAGE = 6;
@@ -13,6 +15,7 @@ const PROJECTS_PER_PAGE = 6;
 /** Every homepage section the CMS can order or hide. The footer/contact is always last. */
 export const HOME_SECTIONS = [
   { key: "about", label: "Profile" },
+  { key: "lab", label: "Interactive lab" },
   { key: "education", label: "Education" },
   { key: "experience", label: "Experience" },
   { key: "leadership", label: "Leadership" },
@@ -123,6 +126,20 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
             </div>
           </div>
         </div>
+      </section>
+    ),
+
+    lab: () => (
+      <section className="section lab-section" id="lab" key="lab">
+        <Kicker index={next()} title="Lab" meta="Interactive" />
+        <div className="section-grid">
+          <h2>Robotics, running<br />in your browser.</h2>
+          <p className="lead">
+            A three-joint arm solving inverse kinematics in real time, the same maths that drives real manipulators.
+            Guide it with your cursor (or a tap) and click to grip. Leave it alone and it carries on by itself.
+          </p>
+        </div>
+        <RobotArmLab />
       </section>
     ),
 
@@ -322,14 +339,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
       skills.length > 0 && (
         <section className="section" id="skills" key="skills">
           <Kicker index={next()} title="Stack & Tools" meta="Capabilities" />
-          <div className="skills-grid">
-            {skills.map(group => (
-              <article key={group.id}>
-                <small>{group.category}</small>
-                {group.skills.map(skill => <h3 key={skill}>{skill}</h3>)}
-              </article>
-            ))}
-          </div>
+          <SkillsExplorer groups={skills} projects={projects} />
         </section>
       ),
 
