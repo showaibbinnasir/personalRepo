@@ -6,7 +6,7 @@ import { useState } from "react";
 import ChatWidget from "./ChatWidget";
 import BlogCard from "./BlogCard";
 import MobileMenu from "./MobileMenu";
-import RobotArmLab from "./RobotArmLab";
+import LabTabs from "./LabTabs";
 import SkillsExplorer from "./SkillsExplorer";
 import { DEFAULT_RESUME_PATH, hasRichContent, uniqueList } from "@/lib/site";
 
@@ -135,11 +135,11 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
         <div className="section-grid">
           <h2>Robotics, running<br />in your browser.</h2>
           <p className="lead">
-            A three-joint arm solving inverse kinematics in real time, the same maths that drives real manipulators.
-            Guide it with your cursor (or a tap) and click to grip. Leave it alone and it carries on by itself.
+            Two live experiments built on the maths behind real robots: an arm solving inverse kinematics as you
+            guide it, and a drone you can tune with a PID controller. Have a play.
           </p>
         </div>
-        <RobotArmLab />
+        <LabTabs />
       </section>
     ),
 
