@@ -302,7 +302,10 @@ export default function BlogManager({
               </div>
               <div className="cms-publish-links">
                 {draft._id && state === "published" && (
-                  <a href={`/blog/${draft.slug}`} target="_blank" rel="noreferrer"><Icon name="external" size={14} /> View live post</a>
+                  <>
+                    <a href={`/blog/${draft.slug}`} target="_blank" rel="noreferrer"><Icon name="external" size={14} /> View live post</a>
+                    <a href={`/blog/${draft.slug}/story`} target="_blank" rel="noreferrer"><Icon name="image" size={14} /> Story image</a>
+                  </>
                 )}
                 {draft._id && (
                   <button type="button" className="cms-link-danger" onClick={() => remove(draft._id!, draft.title)}><Icon name="trash" size={14} /> Delete post</button>

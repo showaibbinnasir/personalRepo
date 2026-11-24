@@ -15,6 +15,10 @@ const nextConfig = {
       { protocol: "https", hostname: "*.imgbb.com" }
     ]
   },
+  // Fonts used by the generated story-card images.
+  outputFileTracingIncludes: {
+    "/blog/[slug]/story": ["./assets/fonts/**/*"]
+  },
   async rewrites() {
     return [{ source: "/backend/:path*", destination: `${apiUrl}/:path*` }];
   }
