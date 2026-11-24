@@ -1,3 +1,5 @@
+import MobileMenu from "./MobileMenu";
+
 /** Fixed top bar shared by the blog, project and other inner pages. */
 export default function SiteHeader({ email, active }: { name?: string; email?: string; active?: "blog" | "work" }) {
   return (
@@ -16,6 +18,17 @@ export default function SiteHeader({ email, active }: { name?: string; email?: s
       ) : (
         <span />
       )}
+      <MobileMenu
+        email={email}
+        links={[
+          { href: "/", label: "Home" },
+          { href: "/#work", label: "Work" },
+          { href: "/#about", label: "About" },
+          { href: "/blog", label: "Blog" },
+          { href: "/cv", label: "CV" },
+          { href: "/#contact", label: "Contact" }
+        ]}
+      />
     </header>
   );
 }

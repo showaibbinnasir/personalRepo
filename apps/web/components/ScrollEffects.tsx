@@ -111,8 +111,9 @@ export default function ScrollEffects() {
     }
 
     /* ---------- Card spotlight: a soft glow that follows the pointer ---------- */
-    if (!reduceMotion && window.matchMedia("(hover: hover)").matches) {
+    if (!reduceMotion) {
       const onMove = (e: PointerEvent) => {
+        if (e.pointerType === "touch") return;
         const card = (e.target as Element | null)?.closest?.<HTMLElement>(".pcard, .bcard");
         if (!card) return;
         const r = card.getBoundingClientRect();
