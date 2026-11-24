@@ -3539,9 +3539,7 @@ html.menu-open .topbar {
     background:
         linear-gradient(rgba(244, 241, 236, .035) 1px, transparent 1px) 0 0 / 40px 40px,
         linear-gradient(90deg, rgba(244, 241, 236, .035) 1px, transparent 1px) 0 0 / 40px 40px,
-        rgba(10, 8, 12, .55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px)
+        rgba(11, 9, 14, .8)
 }
 
 /* Corner brackets, matching the cards. */
@@ -4029,5 +4027,374 @@ html.menu-open .topbar {
     .edge-related,
     .star-core {
         animation: none
+    }
+}
+
+/* =====================================================================
+   LAB TABS + PID PLAYGROUND  (components/LabTabs.tsx, PidPlayground.tsx)
+   ===================================================================== */
+
+.lab-tablist {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0 14px
+}
+
+.lab-tablist button {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: baseline;
+    padding: 12px 18px;
+    border: 1px solid var(--card-line);
+    border-radius: 6px;
+    background: rgba(8, 6, 10, .45);
+    color: var(--muted);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .3s ease, color .3s ease, background-color .3s ease
+}
+
+.lab-tablist small {
+    grid-row: span 2;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent)
+}
+
+.lab-tablist span {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.01em
+}
+
+.lab-tablist em {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase
+}
+
+.lab-tablist button:hover {
+    border-color: var(--card-line-strong);
+    color: var(--fg)
+}
+
+.lab-tablist button.is-active {
+    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    background: color-mix(in srgb, var(--accent) 10%, rgba(8, 6, 10, .6));
+    color: var(--fg)
+}
+
+.lab-panel {
+    animation: labIn .5s var(--ease-out) both
+}
+
+@keyframes labIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px)
+    }
+}
+
+/* No live backdrop blur here: re-blurring the animated starfield behind a large panel
+   every frame is expensive. A more solid tint looks the same and stays at 60 fps. */
+.pid-lab {
+    border: 1px solid var(--card-line);
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(11, 9, 14, .84)
+}
+
+.pid-stage {
+    position: relative;
+    height: clamp(340px, 44vh, 440px);
+    border-bottom: 1px solid var(--card-line);
+    background:
+        linear-gradient(rgba(244, 241, 236, .03) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(90deg, rgba(244, 241, 236, .03) 1px, transparent 1px) 0 0 / 40px 40px
+}
+
+.pid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: pan-y
+}
+
+.pid-hud-tl {
+    top: 14px;
+    left: auto;
+    right: 24px
+}
+
+.pid-metrics {
+    top: 44px;
+    min-width: 210px
+}
+
+.pid-metrics dd.is-warn {
+    color: var(--accent)
+}
+
+.pid-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 28px;
+    padding: 22px 24px 24px
+}
+
+.pid-sliders {
+    display: grid;
+    gap: 18px
+}
+
+.pid-slider {
+    display: grid;
+    gap: 8px
+}
+
+.pid-slider-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted)
+}
+
+.pid-slider-head b {
+    font-size: 14px;
+    color: var(--fg);
+    letter-spacing: .02em
+}
+
+.pid-slider-head output {
+    margin-left: auto;
+    min-width: 52px;
+    padding: 3px 8px;
+    border: 1px solid var(--card-line);
+    border-radius: 3px;
+    color: var(--fg);
+    text-align: right;
+    font-variant-numeric: tabular-nums
+}
+
+.pid-slider small {
+    font-size: 12.5px;
+    color: #9d958f
+}
+
+.pid-slider input[type="range"] {
+    --fill: 0%;
+    width: 100%;
+    height: 22px;
+    margin: 0;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer
+}
+
+.pid-slider input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent) var(--fill), rgba(244, 241, 236, .14) var(--fill))
+}
+
+.pid-slider input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 99px;
+    background: rgba(244, 241, 236, .14)
+}
+
+.pid-slider input[type="range"]::-moz-range-progress {
+    height: 4px;
+    border-radius: 99px;
+    background: var(--accent)
+}
+
+.pid-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -7px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    background: #0d0a10;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    transition: transform .2s ease
+}
+
+.pid-slider input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    background: #0d0a10
+}
+
+.pid-slider input[type="range"]:hover::-webkit-slider-thumb,
+.pid-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15)
+}
+
+.pid-side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px
+}
+
+.pid-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px
+}
+
+.pid-presets button,
+.pid-btn {
+    padding: 8px 13px;
+    border: 1px solid var(--card-line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease
+}
+
+.pid-presets button:hover,
+.pid-btn:hover {
+    border-color: var(--fg)
+}
+
+.pid-presets button.is-active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff
+}
+
+.pid-note {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #c2bab4;
+    min-height: 4.6em
+}
+
+.pid-challenge {
+    padding: 14px 16px;
+    border: 1px dashed var(--card-line-strong);
+    border-radius: 6px;
+    transition: border-color .4s ease, background-color .4s ease
+}
+
+.pid-challenge small {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted)
+}
+
+.pid-challenge ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted)
+}
+
+.pid-challenge li.is-ok {
+    color: #5fd39a
+}
+
+.pid-challenge.is-passed {
+    border-style: solid;
+    border-color: #5fd39a;
+    background: rgba(95, 211, 154, .07)
+}
+
+.pid-challenge.is-passed small {
+    color: #5fd39a
+}
+
+.pid-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto
+}
+
+.pid-btn.is-on {
+    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    color: var(--fg);
+    background: color-mix(in srgb, var(--accent) 14%, transparent)
+}
+
+@media (max-width: 900px) {
+    .pid-controls {
+        grid-template-columns: minmax(0, 1fr)
+    }
+}
+
+@media (max-width: 760px) {
+    .lab-tablist button {
+        flex: 1;
+        padding: 10px 12px
+    }
+
+    .lab-tablist em {
+        display: none
+    }
+
+    /* Phones: chart on top, metrics as a compact readout underneath it. */
+    .pid-stage {
+        height: auto;
+        padding-top: 300px
+    }
+
+    .pid-canvas {
+        height: 300px;
+        bottom: auto
+    }
+
+    .pid-hud-tl {
+        display: none
+    }
+
+    .pid-stage .arm-hud--bl {
+        display: none
+    }
+
+    .pid-metrics {
+        position: static;
+        margin: 10px 12px 12px;
+        min-width: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 16px;
+        padding: 10px 12px;
+        font-size: 10px
+    }
+
+    .pid-metrics div,
+    .pid-metrics div:nth-child(n+4) {
+        display: flex
+    }
+
+    .pid-controls {
+        padding: 18px 16px 20px
     }
 }
