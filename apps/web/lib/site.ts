@@ -10,3 +10,19 @@ export function formatDate(value?: string | null, opts: Intl.DateTimeFormatOptio
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-GB", { ...opts, timeZone: "UTC" });
 }
+
+/**
+ * True when rich text has something to show. The editor saves an emptied field as
+ * "<p></p>" (or similar), which must not count as a case study.
+ */
+export function hasRichContent(html?: string | null) {
+  if (!html) return false;
+  if (/<(img|iframe|video|hr)\b/i.test(html)) return true;
+  return html.replace(/<[^>]+>/g, "").replace(/&nbsp;|&#160;|\s/g, "").length > 0;
+}
+
+/** Case-insensitive de-duplication, keeping the first spelling. */
+export function uniqueList(items: string[] = []) {
+  const seen = new Set<string>();
+  return items.map(i => i.trim()).filter(i => i && !seen.has(i.toLowerCase()) && seen.add(i.toLowerCase()));
+}

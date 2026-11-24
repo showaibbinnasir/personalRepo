@@ -6,7 +6,7 @@ import { useState } from "react";
 import ChatWidget from "./ChatWidget";
 import BlogCard from "./BlogCard";
 import MobileMenu from "./MobileMenu";
-import { DEFAULT_RESUME_PATH } from "@/lib/site";
+import { DEFAULT_RESUME_PATH, hasRichContent, uniqueList } from "@/lib/site";
 
 const PROJECTS_PER_PAGE = 6;
 
@@ -207,6 +207,8 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
             <div className="card-grid project-grid">
               {displayedProjects.map((project, index) => {
                 const projectNumber = showAllProjects ? projectStartIndex + index + 1 : index + 1;
+                const caseStudy = hasRichContent(project.description);
+                const tech = uniqueList(project.tech);
                 return (
                   <article className={`pcard ${project.featured ? "is-featured" : ""}`} key={project.id}>
                     <div className="pcard-media">
@@ -223,21 +225,21 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
                     <div className="pcard-body">
                       {project.featured && <span className="card-flag">Featured</span>}
                       <h3>
-                        {project.description ? (
+                        {caseStudy ? (
                           <a className="card-stretch" href={`/projects/${encodeURIComponent(project.id)}`}>{project.title}</a>
                         ) : (
                           project.title
                         )}
                       </h3>
                       {project.summary && <p>{project.summary}</p>}
-                      {project.tech.length > 0 && (
+                      {tech.length > 0 && (
                         <ul className="chips" aria-label="Technologies">
-                          {project.tech.slice(0, 4).map(technology => <li key={technology}>{technology}</li>)}
-                          {project.tech.length > 4 && <li className="chips-more">+{project.tech.length - 4}</li>}
+                          {tech.slice(0, 4).map((technology, i) => <li key={`${technology}-${i}`}>{technology}</li>)}
+                          {tech.length > 4 && <li className="chips-more">+{tech.length - 4}</li>}
                         </ul>
                       )}
                       <div className="card-links">
-                        {project.description && <a href={`/projects/${encodeURIComponent(project.id)}`}>Case study <i aria-hidden="true">→</i></a>}
+                        {caseStudy && <a href={`/projects/${encodeURIComponent(project.id)}`}>Case study <i aria-hidden="true">→</i></a>}
                         {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">Live <i aria-hidden="true">↗</i></a>}
                         {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer">Code <i aria-hidden="true">↗</i></a>}
                       </div>
