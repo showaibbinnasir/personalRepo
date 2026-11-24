@@ -34,7 +34,7 @@ const REVEAL_SELECTOR = [
   ".post-footer > *",
   ".blog-index-head > *",
   ".blog-tags",
-  ".project-detail > *",
+  ".project-detail > :not(.project-article)",
   ".project-article > *",
   ".empty-public"
 ].join(",");
@@ -75,7 +75,8 @@ export default function ScrollEffects() {
             window.setTimeout(done, 1600 + i * 85);
           });
         },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+        // threshold 0: fire as soon as any part enters, however tall the element is.
+        { rootMargin: "0px 0px -6% 0px", threshold: 0 }
       );
 
       const register = (scope: ParentNode) => {
@@ -86,8 +87,9 @@ export default function ScrollEffects() {
           if (el.classList.contains("reveal-item") || el.closest(EXCLUDE)) return;
           const rect = el.getBoundingClientRect();
           el.classList.add("reveal-item");
-          if (rect.top < vh * 0.96 && rect.bottom > 0) {
-            // Already on screen at load: show immediately, no animation, no flash.
+          // Never hide something taller than the screen: fading it in reads as a blank page.
+          if (rect.height > vh * 0.9 || (rect.top < vh * 0.96 && rect.bottom > 0)) {
+            // Already on screen at load (or very tall): show immediately, no animation, no flash.
             el.classList.add("is-visible", "reveal-done");
           } else {
             io.observe(el);

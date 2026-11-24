@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPortfolio, getPosts } from "@/lib/api";
-import { SITE_URL } from "@/lib/site";
+import { hasRichContent, SITE_URL } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }, undefined);
 
   const projectEntries: MetadataRoute.Sitemap = (portfolio?.projects || [])
-    .filter(p => p.visible !== false && p.description)
+    .filter(p => p.visible !== false && hasRichContent(p.description))
     .map(p => ({
       url: `${SITE_URL}/projects/${encodeURIComponent(p.id)}`,
       lastModified: portfolioUpdated,
