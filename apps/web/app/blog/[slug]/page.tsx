@@ -6,6 +6,7 @@ import { absoluteUrl, formatDate, SITE_URL } from "@/lib/site";
 import { sanitizeRichText, withHeadingAnchors } from "@/lib/richtext";
 import SiteHeader from "@/components/SiteHeader";
 import ShareButtons from "@/components/ShareButtons";
+import StoryShare from "@/components/StoryShare";
 import BlogCard from "@/components/BlogCard";
 
 export const revalidate = 60;
@@ -128,7 +129,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                 </small>
               </div>
             </div>
-            <ShareButtons url={url} title={post.title} text={post.excerpt} compact />
+            <div className="post-share-row">
+              <StoryShare slug={post.slug} url={url} title={post.title} />
+              <ShareButtons url={url} title={post.title} text={post.excerpt} compact />
+            </div>
           </div>
         </header>
 
@@ -155,7 +159,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         </div>
 
         <footer className="post-footer">
-          <ShareButtons url={url} title={post.title} text={post.excerpt} />
+          <div className="post-share-footer">
+            <ShareButtons url={url} title={post.title} text={post.excerpt} />
+            <StoryShare slug={post.slug} url={url} title={post.title} />
+          </div>
 
           {profile && (
             <div className="author-card">
