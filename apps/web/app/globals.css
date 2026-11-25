@@ -4630,3 +4630,158 @@ main {
 .project-share-footer + .project-detail-footer {
     margin-top: 0
 }
+
+/* =====================================================================
+   ROBOTIC HAND CURSOR (mouse / trackpad only)
+   ===================================================================== */
+
+/* The native cursor is hidden only after a real mouse move, so touch devices never lose it. */
+html.robot-cursor-on,
+html.robot-cursor-on * {
+    cursor: none !important
+}
+
+/* Text fields keep the normal text cursor. */
+html.robot-cursor-on input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+html.robot-cursor-on textarea,
+html.robot-cursor-on [contenteditable="true"],
+html.robot-cursor-on [contenteditable="true"] * {
+    cursor: text !important
+}
+
+.robot-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s ease;
+    will-change: transform
+}
+
+.robot-cursor[data-visible="true"] {
+    opacity: 1
+}
+
+.robot-cursor[data-text="true"] {
+    opacity: 0
+}
+
+.robot-cursor-hand {
+    will-change: transform;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .55))
+}
+
+.robot-cursor svg {
+    display: block;
+    overflow: visible;
+    transform-origin: 11.4px 1px;
+    transition: transform .18s var(--ease-out, ease)
+}
+
+.robot-cursor svg g,
+.robot-cursor svg circle {
+    transform-box: view-box
+}
+
+/* Index finger extends/retracts from its knuckle. */
+.robot-cursor .rc-index {
+    transform-origin: 18.25px 38px;
+    transition: transform .16s var(--ease-out, ease)
+}
+
+.robot-cursor .rc-fingers {
+    transform-origin: 38px 40px;
+    transition: transform .2s ease
+}
+
+.robot-cursor .rc-thumb {
+    transform-origin: 12px 50px;
+    transition: transform .2s ease
+}
+
+.robot-cursor .rc-led {
+    transition: filter .25s ease, opacity .25s ease;
+    opacity: .75
+}
+
+/* Idle: a quiet servo "breathing" in the fingers and the palm light. */
+@media (prefers-reduced-motion: no-preference) {
+    .robot-cursor .rc-fingers {
+        animation: rc-servo 2.8s ease-in-out infinite
+    }
+
+    .robot-cursor .rc-led {
+        animation: rc-led 2.4s ease-in-out infinite
+    }
+}
+
+@keyframes rc-servo {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(.9px) }
+}
+
+@keyframes rc-led {
+    0%, 100% { opacity: .65 }
+    50% { opacity: 1 }
+}
+
+/* Over something clickable: finger reaches out, thumb tucks, light glows. */
+.robot-cursor[data-hover="true"] .rc-index {
+    transform: scaleY(1.07)
+}
+
+.robot-cursor[data-hover="true"] .rc-thumb {
+    transform: rotate(10deg)
+}
+
+.robot-cursor[data-hover="true"] .rc-led {
+    opacity: 1;
+    animation: none;
+    filter: drop-shadow(0 0 3px #ff4a3a) brightness(1.35)
+}
+
+/* Pressing: finger pushes in and the whole hand dips slightly. */
+.robot-cursor[data-press="true"] svg {
+    transform: scale(.9)
+}
+
+.robot-cursor[data-press="true"] .rc-index {
+    transform: scaleY(.84)
+}
+
+.robot-cursor[data-press="true"] .rc-fingers {
+    transform: translateY(1.6px)
+}
+
+/* Click ring at the fingertip. */
+.robot-cursor-rings {
+    position: fixed;
+    inset: 0;
+    z-index: 2147482999;
+    pointer-events: none
+}
+
+.robot-cursor-ring {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1.5px solid rgba(220, 225, 232, .9);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 74, 58, .45);
+    animation: rc-ring .6s var(--ease-out, ease) forwards
+}
+
+@keyframes rc-ring {
+    from { transform: scale(.2); opacity: 1 }
+    to { transform: scale(1.4); opacity: 0 }
+}
+
+@media print {
+    .robot-cursor,
+    .robot-cursor-rings {
+        display: none !important
+    }
+}

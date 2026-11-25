@@ -4,6 +4,7 @@ import "./globals.css";
 import { getPortfolio } from "@/lib/api";
 import ScrollEffects from "@/components/ScrollEffects";
 import SpaceBackground from "@/components/SpaceBackground";
+import RobotCursor from "@/components/RobotCursor";
 
 import { SITE_URL } from "@/lib/site";
 
@@ -88,6 +89,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         )}
         <SpaceBackground />
         <ScrollEffects />
+        <RobotCursor />
         {children}
       </body>
     </html>
