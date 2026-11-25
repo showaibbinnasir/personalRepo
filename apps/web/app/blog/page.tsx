@@ -121,7 +121,6 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
 
       <footer className="blog-footer">
         <a href="/">← Back to portfolio</a>
-        <a href="/blog/feed.xml">RSS feed ↗</a>
       </footer>
     </main>
   );

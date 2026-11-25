@@ -205,7 +205,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
       <footer className="blog-footer">
         <a href="/blog">← All posts</a>
-        <a href="/blog/feed.xml">RSS feed ↗</a>
       </footer>
     </main>
   );

@@ -9,6 +9,14 @@ import MobileMenu from "./MobileMenu";
 import LabTabs from "./LabTabs";
 import SkillsExplorer from "./SkillsExplorer";
 import CardArt from "./CardArt";
+
+const OLD_FOOTER_NOTE = "Designed around clarity, engineering and intelligent systems.";
+const DEFAULT_FOOTER_NOTE = "Designed by Showaib Bin Nasir";
+/** Replaces the old default footer line; a custom note set in the CMS is shown as is. */
+function footerNote(note?: string) {
+  const n = (note || "").trim();
+  return !n || n === OLD_FOOTER_NOTE ? DEFAULT_FOOTER_NOTE : n;
+}
 import { DEFAULT_RESUME_PATH, hasRichContent, uniqueList } from "@/lib/site";
 
 const PROJECTS_PER_PAGE = 6;
@@ -324,7 +332,6 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
               <p className="lead">Writing about what I&apos;m building, learning and thinking about in robotics, AI and software.</p>
               <div className="mini-links">
                 <a href="/blog">All articles ↗</a>
-                <a href="/blog/feed.xml">RSS ↗</a>
               </div>
             </div>
           </div>
@@ -483,7 +490,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
         <a className="email-big" href={`mailto:${profile.email}`}>{profile.email}</a>
         <div className="footer-bottom">
           <span>{profile.phone}</span>
-          <span>{siteSettings.footerNote}</span>
+          <span>{footerNote(siteSettings.footerNote)}</span>
           <div>
             {socials.map(social => (
               <a key={social.id} href={social.url} target="_blank" rel="noreferrer">{social.label}</a>

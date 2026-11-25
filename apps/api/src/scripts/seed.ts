@@ -57,7 +57,7 @@ const seed = {
   ],
   sectionOrder: ["about", "education", "experience", "leadership", "projects", "blog", "skills", "languages", "certifications", "ask-ai"],
   hiddenSections: [],
-  siteSettings: { accent: "#A71919", background: "#080606", foreground: "#F4F1EC", muted: "#A9A4A0", footerNote: "Designed around clarity, engineering and intelligent systems." }
+  siteSettings: { accent: "#A71919", background: "#080606", foreground: "#F4F1EC", muted: "#A9A4A0", footerNote: "Designed by Showaib Bin Nasir" }
 };
 
 await Portfolio.findOneAndUpdate({ key: "main" }, { $setOnInsert: seed }, { upsert: true, new: true, setDefaultsOnInsert: true });
