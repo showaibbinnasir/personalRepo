@@ -8,6 +8,7 @@ import BlogCard from "./BlogCard";
 import MobileMenu from "./MobileMenu";
 import LabTabs from "./LabTabs";
 import SkillsExplorer from "./SkillsExplorer";
+import CardArt from "./CardArt";
 import { DEFAULT_RESUME_PATH, hasRichContent, uniqueList } from "@/lib/site";
 
 const PROJECTS_PER_PAGE = 6;
@@ -232,9 +233,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
                       {project.imageUrl ? (
                         <img src={project.imageUrl} alt={project.title} loading="lazy" />
                       ) : (
-                        <div className="card-placeholder" aria-hidden="true">
-                          <span>{project.title.slice(0, 2)}</span>
-                        </div>
+                        <CardArt seed={project.id || project.title} label={project.category || "Project"} />
                       )}
                       <span className="card-index">P/{String(projectNumber).padStart(2, "0")}</span>
                       {project.category && <span className="card-badge">{project.category}</span>}
@@ -418,9 +417,10 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
   return (
     <main style={styles}>
       <header className="topbar">
-        <a className="brand" href="#top">SBN<span>•</span></a>
+        <a className="brand" href="#top" aria-label="SBN, back to top">SBN<span>•</span></a>
         <nav aria-label="Main">
           {navHas("projects") && <a href="#work">Work</a>}
+          {navHas("lab") && <a href="#lab">Lab</a>}
           {navHas("about") && <a href="#about">About</a>}
           {navHas("blog") && <a href="/blog">Blog</a>}
           <a href="/cv">CV</a>
@@ -431,6 +431,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
           email={profile.email}
           links={[
             ...(navHas("projects") ? [{ href: "#work", label: "Work" }] : []),
+            ...(navHas("lab") ? [{ href: "#lab", label: "Lab" }] : []),
             ...(navHas("about") ? [{ href: "#about", label: "About" }] : []),
             ...(navHas("experience") ? [{ href: "#experience", label: "Experience" }] : []),
             ...(navHas("blog") ? [{ href: "/blog", label: "Blog" }] : []),

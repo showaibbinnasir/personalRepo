@@ -280,20 +280,41 @@ export default function SpaceBackground() {
       }, 150);
     };
 
-    build();
-    if (reduceMotion) {
-      frame(performance.now());
-      cancelAnimationFrame(raf);
-    } else {
-      raf = requestAnimationFrame(frame);
-      // Mouse/pen only (checked per event), so touch scrolling never triggers it.
-      window.addEventListener("pointermove", onMove, { passive: true });
-      document.documentElement.addEventListener("pointerleave", onLeave);
-      document.addEventListener("visibilitychange", onVisibility);
-    }
-    window.addEventListener("resize", onResize);
+    // Start once the page is interactive, so the starfield never competes with
+    // loading (the nebula layers are plain CSS and show immediately).
+    let started = false;
+    let idleHandle = 0;
+    const init = () => {
+      if (started) return;
+      started = true;
+      build();
+      if (reduceMotion) {
+        frame(performance.now());
+        cancelAnimationFrame(raf);
+      } else {
+        raf = requestAnimationFrame(frame);
+        // Mouse/pen only (checked per event), so touch scrolling never triggers it.
+        window.addEventListener("pointermove", onMove, { passive: true });
+        document.documentElement.addEventListener("pointerleave", onLeave);
+        document.addEventListener("visibilitychange", onVisibility);
+      }
+      window.addEventListener("resize", onResize);
+      canvas.classList.add("is-on");
+    };
+    const schedule = () => {
+      const ric = (window as any).requestIdleCallback as ((cb: () => void, o?: { timeout: number }) => number) | undefined;
+      if (ric) idleHandle = ric(init, { timeout: 1200 });
+      else idleHandle = window.setTimeout(init, 300);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
 
     return () => {
+      started = true;
+      const cic = (window as any).cancelIdleCallback as ((h: number) => void) | undefined;
+      if (cic) cic(idleHandle);
+      window.clearTimeout(idleHandle);
+      window.removeEventListener("load", schedule);
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);

@@ -80,7 +80,7 @@ main {
 }
 
 .brand span {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .topbar nav {
@@ -92,7 +92,7 @@ main {
 }
 
 .topbar nav a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .pill-link {
@@ -240,7 +240,7 @@ main {
 }
 
 .section-kicker span:first-child {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .section-kicker span:last-child {
@@ -286,7 +286,7 @@ main {
 }
 
 .mini-links a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .rows {
@@ -356,7 +356,7 @@ main {
 }
 
 .skills-grid small {
-    color: var(--accent);
+    color: var(--accent-text);
     text-transform: uppercase;
     letter-spacing: .14em
 }
@@ -370,13 +370,16 @@ main {
 .language-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    column-gap: 7vw;
     border-top: 1px solid var(--line)
 }
 
+/* Name with its level directly underneath, so each level clearly belongs to its language. */
 .language-list>div {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     padding: 30px 0;
     border-bottom: 1px solid var(--line)
 }
@@ -459,7 +462,7 @@ main {
 
 .large-cta:hover {
     background: white;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .footer {
@@ -469,7 +472,7 @@ main {
 }
 
 .footer>small {
-    color: var(--accent);
+    color: var(--accent-text);
     letter-spacing: .16em
 }
 
@@ -483,7 +486,7 @@ main {
 }
 
 .email-big:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .footer-bottom {
@@ -1142,7 +1145,7 @@ main {
 }
 
 .project-detail-nav a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .project-detail {
@@ -1617,7 +1620,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .topbar nav a[aria-current="page"] {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 /* Hero intro — plays once on load. */
@@ -1764,7 +1767,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .back-link:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 /* =====================================================================
@@ -1880,7 +1883,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .blog-footer a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .home-blog .section-grid {
@@ -1909,7 +1912,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .post-breadcrumb a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .post-tags {
@@ -1972,7 +1975,7 @@ html[data-scrolled="true"] .topbar {
     font-weight: 900;
     font-size: 12px;
     letter-spacing: -.02em;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .post-author strong {
@@ -2229,7 +2232,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .post-nav a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .post-nav small {
@@ -2547,7 +2550,7 @@ html[data-scrolled="true"] .topbar {
     font-size: 10px;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .card-flag::before {
@@ -2611,7 +2614,7 @@ html[data-scrolled="true"] .topbar {
 }
 
 .card-meta span[aria-hidden] {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .card-meta .card-flag {
@@ -3026,7 +3029,7 @@ body>main {
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: .1em;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .mobile-menu li span {
@@ -3219,7 +3222,7 @@ html.menu-open .topbar {
 }
 
 .project-detail-footer a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .project-detail-footer small {
@@ -3416,7 +3419,7 @@ html.menu-open .topbar {
     font-size: 11px;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .story-side h3 {
@@ -3803,8 +3806,8 @@ html.menu-open .topbar {
     font-size: 13px;
     letter-spacing: .18em;
     text-transform: uppercase;
-    fill: var(--accent);
-    opacity: .75;
+    fill: var(--accent-text);
+    opacity: .9;
     transition: opacity .3s ease
 }
 
@@ -3921,7 +3924,7 @@ html.menu-open .topbar {
     font-size: 11px;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .constellation-panel h3 {
@@ -3960,7 +3963,7 @@ html.menu-open .topbar {
 }
 
 .constellation-panel li a:hover {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .constellation-panel li i {
@@ -4060,7 +4063,7 @@ html.menu-open .topbar {
     grid-row: span 2;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .lab-tablist span {
@@ -4138,7 +4141,7 @@ html.menu-open .topbar {
 }
 
 .pid-metrics dd.is-warn {
-    color: var(--accent)
+    color: var(--accent-text)
 }
 
 .pid-controls {
@@ -4397,4 +4400,220 @@ html.menu-open .topbar {
     .pid-controls {
         padding: 18px 16px 20px
     }
+}
+
+/* =====================================================================
+   ACCESSIBILITY & POLISH
+   ===================================================================== */
+
+/* A brighter version of the accent for small text: the brand red stays for
+   fills, borders and large type, while small labels meet 4.5:1 contrast on black.
+   Defined on <main> too, because the CMS colour is set there. */
+:root,
+main {
+    --accent-text: color-mix(in srgb, var(--accent) 40%, #ff6b5e)
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0
+}
+
+/* Comfortable tap targets (at least 24px; most are 32px+). */
+.back-link,
+.blog-footer a,
+.post-breadcrumb a,
+.mini-links a,
+.card-links a,
+.footer-bottom a,
+.post-tags a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px
+}
+
+.post-breadcrumb {
+    align-items: center
+}
+
+.card-links {
+    gap: 2px 18px
+}
+
+/* ---------- 404 / error pages ---------- */
+
+.status-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column
+}
+
+.status-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 140px max(24px, 4vw) 80px
+}
+
+.status-body .section-kicker {
+    margin-bottom: 48px
+}
+
+.status-body h1 {
+    margin: 0 0 36px;
+    font-size: clamp(64px, 13vw, 200px);
+    line-height: .82;
+    letter-spacing: -.075em;
+    text-transform: uppercase;
+    font-weight: 900
+}
+
+.status-body h1 span {
+    display: block
+}
+
+.status-body h1 span:last-child {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--fg)
+}
+
+.status-body .lead {
+    max-width: 620px
+}
+
+.status-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 36px
+}
+
+.status-links a,
+.status-links button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 1px solid var(--card-line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color .3s ease, border-color .3s ease, color .3s ease
+}
+
+.status-links a:hover,
+.status-links button:hover {
+    border-color: var(--fg);
+    background: var(--fg);
+    color: var(--bg)
+}
+
+.status-links .status-primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff
+}
+
+.status-links i {
+    font-style: normal
+}
+
+.status-ref {
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted)
+}
+
+/* ---------- Skills list on phones: compact chips per category ---------- */
+
+@media (max-width: 760px) {
+    .skills-explorer .skills-grid {
+        gap: 0
+    }
+
+    .skills-explorer .skills-grid article {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 22px 0;
+        border-bottom: 1px solid var(--line)
+    }
+
+    .skills-explorer .skills-grid article small {
+        flex-basis: 100%;
+        margin-bottom: 4px
+    }
+
+    .skills-explorer .skills-grid article h3 {
+        margin: 0;
+        padding: 7px 11px;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: .01em;
+        border: 1px solid var(--card-line);
+        border-radius: 3px;
+        background: rgba(244, 241, 236, .035)
+    }
+}
+
+/* Starfield fades in once it starts (after the page is interactive). */
+.space-stars {
+    opacity: 0;
+    transition: opacity 1.2s ease
+}
+
+.space-stars.is-on {
+    opacity: 1
+}
+
+/* Generated planet art for cards without a cover. */
+.card-art {
+    background: radial-gradient(ellipse at 20% 100%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), linear-gradient(160deg, #0d0a0c, #050405)
+}
+
+.card-art svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 1.1s var(--ease-out)
+}
+
+.pcard:hover .card-art svg,
+.bcard:hover .card-art svg {
+    transform: scale(1.05)
+}
+
+.card-art .card-art-label {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(244, 241, 236, .55);
+    -webkit-text-stroke: 0
 }

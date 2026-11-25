@@ -90,7 +90,6 @@ export default function SkillsExplorer({ groups, projects }: { groups: SkillGrou
       const rowOffset = ((cols - inRow) * cellW) / 2;
       const cx = rowOffset + cellW * (col + 0.5) + (rand() - 0.5) * cellW * 0.12;
       const cy = cellH * (row + 0.5) + (rand() - 0.5) * cellH * 0.1;
-      clusters.push({ id: `c${gi}`, label: group.category, x: cx, y: cy });
 
       const skills = group.skills.filter(Boolean);
       const n = skills.length;
@@ -117,6 +116,11 @@ export default function SkillsExplorer({ groups, projects }: { groups: SkillGrou
           delay: delay++ * 35
         });
       });
+      // Category name sits just below the cluster, clear of its lines and star labels.
+      const own = nodes.slice(nodes.length - ids.length);
+      const bottom = own.length ? Math.max(...own.map(o => Math.max(o.y + o.r, o.labelY))) : cy;
+      clusters.push({ id: `c${gi}`, label: group.category, x: cx, y: Math.min(bottom + 30, VB_H - 8) });
+
       // Constellation lines: an open loop through the cluster's stars.
       for (let i = 0; i < ids.length - 1; i++) edges.push({ a: ids[i], b: ids[i + 1] });
       if (ids.length > 3) edges.push({ a: ids[0], b: ids[Math.floor(ids.length / 2)] });

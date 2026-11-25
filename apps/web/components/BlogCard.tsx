@@ -1,4 +1,5 @@
 import type { BlogPostSummary } from "@/lib/types";
+import CardArt from "./CardArt";
 
 /** "23 NOV 2026" — compact, terminal-style date for card metadata. */
 function shortDate(value?: string | null) {
@@ -15,9 +16,7 @@ export default function BlogCard({ post, index, large }: { post: BlogPostSummary
         {post.coverImageUrl ? (
           <img src={post.coverImageUrl} alt={post.coverImageAlt || ""} loading="lazy" />
         ) : (
-          <div className="card-placeholder card-placeholder--journal" aria-hidden="true">
-            <span>{post.title.slice(0, 2)}</span>
-          </div>
+          <CardArt seed={post.slug || post.title} label="Journal" />
         )}
         {index !== undefined && <span className="card-index">B/{String(index + 1).padStart(2, "0")}</span>}
         {post.tags?.[0] && <span className="card-badge">{post.tags[0]}</span>}

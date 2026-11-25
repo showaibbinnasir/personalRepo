@@ -4,11 +4,12 @@ import MobileMenu from "./MobileMenu";
 export default function SiteHeader({ email, active }: { name?: string; email?: string; active?: "blog" | "work" }) {
   return (
     <header className="topbar">
-      <a className="brand" href="/" aria-label="Home">
+      <a className="brand" href="/" aria-label="SBN, home">
         SBN<span>•</span>
       </a>
       <nav aria-label="Main">
         <a href="/#work" aria-current={active === "work" ? "page" : undefined}>Work</a>
+        <a href="/#lab">Lab</a>
         <a href="/#about">About</a>
         <a href="/blog" aria-current={active === "blog" ? "page" : undefined}>Blog</a>
         <a href="/cv">CV</a>
@@ -23,6 +24,7 @@ export default function SiteHeader({ email, active }: { name?: string; email?: s
         links={[
           { href: "/", label: "Home" },
           { href: "/#work", label: "Work" },
+          { href: "/#lab", label: "Lab" },
           { href: "/#about", label: "About" },
           { href: "/blog", label: "Blog" },
           { href: "/cv", label: "CV" },
