@@ -22,7 +22,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       metaLeft: (project.category || "Project").toUpperCase(),
       metaRight: tech.length ? `${tech.length} ${tech.length === 1 ? "TECHNOLOGY" : "TECHNOLOGIES"}` : "",
       cta: "See it at",
-      path: `/projects/${encodeURIComponent(project.id)}`
+      path: ""
     },
     portfolio
   );

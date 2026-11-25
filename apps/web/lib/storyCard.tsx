@@ -135,6 +135,46 @@ function shortDate(value?: string | null) {
 
 export { shortDate };
 
+/**
+ * Wraps text into at most `maxLines` lines of `width` px, estimating glyph widths
+ * (satori can't measure for us). Adds "…" when shortened. Used to keep every
+ * story card inside its frame, however long the title or description is.
+ */
+function fitLines(text: string, size: number, charFactor: number, width: number, maxLines: number) {
+  const perLine = Math.max(8, Math.floor(width / (size * charFactor)));
+  const words = text.replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
+  const lines: string[] = [];
+  let line = "";
+  let i = 0;
+  for (; i < words.length; i++) {
+    let w = words[i];
+    if (w.length > perLine) w = `${w.slice(0, perLine - 1)}…`;
+    const next = line ? `${line} ${w}` : w;
+    if (next.length <= perLine) {
+      line = next;
+      continue;
+    }
+    lines.push(line);
+    line = w;
+    if (lines.length === maxLines) break;
+  }
+  const truncated = lines.length === maxLines && i < words.length;
+  if (!truncated && line) lines.push(line);
+  if (truncated) {
+    let last = lines[maxLines - 1];
+    while (last.length > perLine - 1 && last.includes(" ")) last = last.slice(0, last.lastIndexOf(" "));
+    lines[maxLines - 1] = `${last.replace(/[\s,.;:–—-]+$/, "")}…`;
+  }
+  return { text: lines.join(" "), lines: Math.max(1, lines.length), truncated };
+}
+
+/** First item of a list-like label ("Embedded Systems / IoT / …" → "Embedded Systems"). */
+function firstLabel(value?: string, max = 26) {
+  if (!value) return "";
+  const first = value.split(/\s*[\/|,•·]\s*/)[0] || value;
+  return clip(first.trim(), max);
+}
+
 export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfolio | null) {
   const accent = portfolio?.siteSettings.accent || "#A71919";
   const bg = "#07060b";
@@ -151,10 +191,45 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
     loadImage(portfolio?.profile.portraitUrl, 160, 160)
   ]);
 
-  const title = clipWords(o.title, 96);
-  const titleSize = title.length <= 34 ? 84 : title.length <= 60 ? 70 : 56;
-  const description = clipWords(o.description || "", title.length > 60 ? 130 : 170);
-  const tags = (o.tags || []).filter(Boolean).slice(0, 3);
+  // ---- Layout budget: everything must fit between the header and the footer. ----
+  const TEXT_W = 888 - 104; // card width minus padding
+  const CARD_MAX = 1150; // H - safe areas (150 + 300) - header - footer - gaps
+  const tags = (o.tags || []).filter(Boolean).map(t => clip(t, 20));
+  // Only as many tags as fit on one line.
+  const shownTags: string[] = [];
+  let tagsWidth = 0;
+  for (const t of tags.slice(0, 3)) {
+    const w = t.length * 14.5 + 2 * 16 + 12;
+    if (tagsWidth + w > TEXT_W) break;
+    shownTags.push(t);
+    tagsWidth += w;
+  }
+  const metaLeft = firstLabel(o.metaLeft);
+  const metaRight = clip(o.metaRight || "", 18);
+
+  // Title: biggest size that fits in 3 lines; at the smallest size it's shortened.
+  let titleSize = 84;
+  let titleFit = fitLines(o.title, titleSize, 0.6, TEXT_W, 3);
+  for (const size of [72, 62, 54]) {
+    if (!titleFit.truncated && titleFit.lines <= (titleSize >= 72 ? 2 : 3)) break;
+    titleSize = size;
+    titleFit = fitLines(o.title, size, 0.6, TEXT_W, 3);
+  }
+  const titleH = Math.ceil(titleFit.lines * titleSize * 1.06);
+
+  const fixedH = 100 /* padding */ + (shownTags.length ? 72 : 0) + titleH + (metaLeft || metaRight ? 96 : 0);
+  // Description: up to 4 lines, fewer if the photo would get too small.
+  let descLines = 4;
+  let mediaH = 0;
+  for (; descLines >= 2; descLines--) {
+    mediaH = CARD_MAX - fixedH - (o.description ? 26 + descLines * 45 : 0);
+    if (mediaH >= 360) break;
+  }
+  descLines = Math.max(descLines, 2);
+  mediaH = Math.max(220, Math.min(cover ? 520 : 420, mediaH));
+  const descFit = fitLines(o.description || "", 32, 0.52, TEXT_W, descLines);
+  const title = titleFit.text;
+  const description = descFit.text;
 
   const rand = seeded(o.seed);
   const stars = Array.from({ length: 90 }, () => ({
@@ -183,7 +258,7 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
 
         <div style={{ position: "relative", display: "flex", flexDirection: "column", width: W, height: H, padding: "150px 96px 300px" }}>
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", flexShrink: 0, height: 60, justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", fontSize: 46, fontWeight: 800, letterSpacing: -2 }}>
               SBN<span style={{ color: accent }}>•</span>
             </div>
@@ -191,49 +266,50 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
           </div>
 
           {/* Card */}
-          <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
+          <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", margin: "36px 0" }}>
             <div
               style={{
-                display: "flex", flexDirection: "column", width: 888, borderRadius: 40, overflow: "hidden",
+                display: "flex", flexDirection: "column", width: 888, maxHeight: CARD_MAX, borderRadius: 40, overflow: "hidden",
                 border: "2px solid rgba(244,241,236,0.14)", background: "rgba(14,10,14,0.86)",
                 boxShadow: `0 40px 120px -30px ${accent}88`
               }}
             >
               {cover ? (
-                <img src={cover} width={888} height={520} style={{ width: 888, height: 520, objectFit: "cover" }} />
+                // flexShrink 0 so the photo keeps its computed height
+                <img src={cover} width={888} height={mediaH} style={{ width: 888, height: mediaH, flexShrink: 0, objectFit: "cover" }} />
               ) : (
-                <div style={{ width: 888, height: 420, display: "flex" }}>
-                  <SpaceArt accent={accent} rand={seeded(`${o.seed}-art`)} width={888} height={420} />
+                <div style={{ width: 888, height: mediaH, flexShrink: 0, display: "flex" }}>
+                  <SpaceArt accent={accent} rand={seeded(`${o.seed}-art`)} width={888} height={mediaH} />
                 </div>
               )}
 
               <div style={{ display: "flex", flexDirection: "column", padding: "48px 52px 52px" }}>
-                {tags.length > 0 && (
-                  <div style={{ display: "flex", gap: 12, marginBottom: 28 }}>
-                    {tags.map(tag => (
+                {shownTags.length > 0 && (
+                  <div style={{ display: "flex", flexShrink: 0, gap: 12, marginBottom: 28 }}>
+                    {shownTags.map(tag => (
                       <div key={tag} style={{ display: "flex", fontFamily: "Mono", fontSize: 22, letterSpacing: 1, padding: "8px 16px", borderRadius: 8, border: "1.5px solid rgba(244,241,236,0.18)", color: "#ddd6d0" }}>
                         {clip(tag, 22)}
                       </div>
                     ))}
                   </div>
                 )}
-                <div style={{ display: "flex", fontSize: titleSize, fontWeight: 800, lineHeight: 1.04, letterSpacing: -2.5 }}>{title}</div>
+                <div style={{ display: "flex", flexShrink: 0, maxHeight: titleH, overflow: "hidden", fontSize: titleSize, fontWeight: 800, lineHeight: 1.04, letterSpacing: -2.5 }}>{title}</div>
                 {description && (
-                  <div style={{ display: "flex", marginTop: 26, fontSize: 32, lineHeight: 1.4, color: "#c2bab4" }}>{description}</div>
+                  <div style={{ display: "flex", flexShrink: 0, maxHeight: descFit.lines * 45, overflow: "hidden", marginTop: 26, fontSize: 32, lineHeight: 1.4, color: "#c2bab4" }}>{description}</div>
                 )}
-                {(o.metaLeft || o.metaRight) && <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 36, paddingTop: 28, borderTop: "2px dashed rgba(244,241,236,0.14)", fontFamily: "Mono", fontSize: 24, letterSpacing: 2, color: muted }}>
-                  {o.metaLeft && <span>{o.metaLeft}</span>}
-                  {o.metaLeft && o.metaRight && <span style={{ color: accent }}>{"//"}</span>}
-                  {o.metaRight && <span>{o.metaRight}</span>}
+                {(metaLeft || metaRight) && <div style={{ display: "flex", flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", alignItems: "center", gap: 16, marginTop: 36, paddingTop: 28, borderTop: "2px dashed rgba(244,241,236,0.14)", fontFamily: "Mono", fontSize: 24, letterSpacing: 2, color: muted }}>
+                  {metaLeft && <span>{metaLeft}</span>}
+                  {metaLeft && metaRight && <span style={{ color: accent }}>{"//"}</span>}
+                  {metaRight && <span>{metaRight}</span>}
                 </div>}
               </div>
             </div>
           </div>
 
           {/* Footer: author + where to read it */}
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 24 }}>
             {avatar ? (
-              <img src={avatar} width={84} height={84} style={{ width: 84, height: 84, borderRadius: 999, objectFit: "cover", border: `3px solid ${accent}` }} />
+              <img src={avatar} width={84} height={84} style={{ width: 84, height: 84, flexShrink: 0, borderRadius: 999, objectFit: "cover", border: `3px solid ${accent}` }} />
             ) : (
               <div style={{ width: 84, height: 84, borderRadius: 999, display: "flex", alignItems: "center", justifyContent: "center", border: `3px solid ${accent}`, fontSize: 26, fontWeight: 800 }}>SBN</div>
             )}
@@ -242,7 +318,7 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
               {role && <div style={{ display: "flex", fontSize: 24, color: muted, marginTop: 4 }}>{clip(role, 46)}</div>}
             </div>
           </div>
-          <div style={{ display: "flex", marginTop: 26, fontFamily: "Mono", fontSize: 24, letterSpacing: 1, color: fg }}>
+          <div style={{ display: "flex", flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", marginTop: 26, fontFamily: "Mono", fontSize: 24, letterSpacing: 1, color: fg }}>
             <span style={{ color: accent, marginRight: 14 }}>•</span>
             {`${o.cta} ${clip(`${host}${o.path}`, 40)}`}
           </div>
