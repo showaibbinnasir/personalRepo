@@ -17,7 +17,8 @@ const nextConfig = {
   },
   // Fonts used by the generated story-card images.
   outputFileTracingIncludes: {
-    "/blog/[slug]/story": ["./assets/fonts/**/*"]
+    "/blog/[slug]/story": ["./assets/fonts/**/*"],
+    "/projects/[id]/story": ["./assets/fonts/**/*"]
   },
   async rewrites() {
     return [{ source: "/backend/:path*", destination: `${apiUrl}/:path*` }];

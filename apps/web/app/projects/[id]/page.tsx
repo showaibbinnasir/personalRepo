@@ -2,6 +2,8 @@ import { getPortfolio } from "@/lib/api";
 import { notFound } from "next/navigation";
 import { sanitizeRichText } from "@/lib/richtext";
 import SiteHeader from "@/components/SiteHeader";
+import ShareButtons from "@/components/ShareButtons";
+import StoryShare from "@/components/StoryShare";
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 
@@ -24,6 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const title = project.title;
   const description = project.summary || `${project.title} — a project by ${portfolio?.profile.name}.`;
   const url = `${SITE_URL}/projects/${encodeURIComponent(project.id)}`;
+  // Projects without a cover get a generated, branded preview card.
+  const image = project.imageUrl || `${url}/og`;
 
   return {
     title,
@@ -34,13 +38,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       description,
       url,
       type: "article",
-      images: project.imageUrl ? [{ url: project.imageUrl, alt: project.title }] : undefined
+      images: [{ url: image, alt: project.title, ...(project.imageUrl ? {} : { width: 1200, height: 630 }) }]
     },
     twitter: {
-      card: project.imageUrl ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title,
       description,
-      images: project.imageUrl ? [project.imageUrl] : undefined
+      images: [image]
     }
   };
 }
@@ -60,6 +64,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     "--muted": portfolio.siteSettings.muted,
   } as CSSProperties;
 
+  const url = `${SITE_URL}/projects/${encodeURIComponent(project.id)}`;
+  const shareText = project.summary || `${project.title}, a project by ${portfolio.profile.name}.`;
+  const storyPath = `/projects/${encodeURIComponent(project.id)}/story`;
   const html = hasRichContent(project.description) ? sanitizeRichText(project.description) : "";
   const tech = uniqueList(project.tech);
 
@@ -98,6 +105,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <h1>{project.title}</h1>
         {project.summary && <p className="project-detail-summary">{project.summary}</p>}
 
+        <div className="post-share-row project-share-row">
+          <StoryShare slug={project.id} url={url} title={project.title} imagePath={storyPath} noun="project" />
+          <ShareButtons url={url} title={project.title} text={shareText} noun="project" compact />
+        </div>
+
         {(tech.length > 0 || project.liveUrl || project.githubUrl) && (
           <section className="project-specs" aria-label="Project details">
             {tech.length > 0 && (
@@ -131,6 +143,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         {project.imageUrl && <img className="project-detail-cover" data-reveal="zoom" src={project.imageUrl} alt={project.title} />}
 
         {html && <div className="project-article" dangerouslySetInnerHTML={{ __html: html }} />}
+
+        <div className="post-share-footer project-share-footer">
+          <ShareButtons url={url} title={project.title} text={shareText} noun="project" />
+          <StoryShare slug={project.id} url={url} title={project.title} imagePath={storyPath} noun="project" />
+        </div>
 
         <nav className="project-detail-footer" aria-label="More projects">
           <a href="/#work"><small>← Back</small><strong>All projects</strong></a>
