@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-type Props = { url: string; title: string; text?: string; compact?: boolean };
+type Props = { url: string; title: string; text?: string; compact?: boolean; noun?: string };
 
 /** Share links for social networks + copy link + the device's native share sheet. */
-export default function ShareButtons({ url, title, text, compact }: Props) {
+export default function ShareButtons({ url, title, text, compact, noun = "post" }: Props) {
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
 
@@ -48,7 +48,7 @@ export default function ShareButtons({ url, title, text, compact }: Props) {
   }
 
   return (
-    <div className={`share ${compact ? "share--compact" : ""}`} aria-label="Share this post">
+    <div className={`share ${compact ? "share--compact" : ""}`} aria-label={`Share this ${noun}`}>
       {!compact && <small>Share</small>}
       <div className="share-buttons">
         {canNativeShare && (

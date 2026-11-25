@@ -4617,3 +4617,16 @@ main {
     color: rgba(244, 241, 236, .55);
     -webkit-text-stroke: 0
 }
+
+/* Sharing on project pages (same controls as blog posts). */
+.project-share-row {
+    margin: -10px 0 38px
+}
+
+.project-share-footer {
+    margin-top: 70px
+}
+
+.project-share-footer + .project-detail-footer {
+    margin-top: 0
+}

@@ -9,7 +9,17 @@ import { createPortal } from "react-dom";
  * or downloads it on computers. The post link is copied so it can be added with
  * the story app's link sticker (websites can't attach a link to a story directly).
  */
-export default function StoryShare({ slug, url, title }: { slug: string; url: string; title: string }) {
+type StoryShareProps = {
+  slug: string;
+  url: string;
+  title: string;
+  /** Path of the 1080×1920 story image. Defaults to the blog post's. */
+  imagePath?: string;
+  /** What's being shared, used in the wording ("post", "project"). */
+  noun?: string;
+};
+
+export default function StoryShare({ slug, url, title, imagePath, noun = "post" }: StoryShareProps) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -19,7 +29,7 @@ export default function StoryShare({ slug, url, title }: { slug: string; url: st
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const objectUrl = useRef<string | null>(null);
-  const imageUrl = `/blog/${encodeURIComponent(slug)}/story`;
+  const imageUrl = imagePath || `/blog/${encodeURIComponent(slug)}/story`;
 
   useEffect(() => setMounted(true), []);
 
@@ -86,7 +96,7 @@ export default function StoryShare({ slug, url, title }: { slug: string; url: st
     const copied = await copyLink(true);
     try {
       await navigator.share({ files: [file], title });
-      setMessage(copied ? "Shared! The post link is copied — add it with the Link sticker." : "Shared!");
+      setMessage(copied ? `Shared! The ${noun} link is copied — add it with the Link sticker.` : "Shared!");
     } catch (e: any) {
       if (e?.name !== "AbortError") setMessage("Sharing didn't work here. Download the image instead.");
     }
@@ -114,7 +124,7 @@ export default function StoryShare({ slug, url, title }: { slug: string; url: st
 
       {mounted && open &&
         createPortal(
-          <div className="story-modal" role="dialog" aria-modal="true" aria-label="Share this post to your story" onClick={e => e.target === e.currentTarget && close()}>
+          <div className="story-modal" role="dialog" aria-modal="true" aria-label={`Share this ${noun} to your story`} onClick={e => e.target === e.currentTarget && close()}>
             <div className="story-panel">
               <button ref={closeRef} type="button" className="story-close" onClick={close} aria-label="Close">×</button>
 
@@ -129,7 +139,7 @@ export default function StoryShare({ slug, url, title }: { slug: string; url: st
 
               <div className="story-side">
                 <small>{"// Share to story"}</small>
-                <h3>Share this post to your story</h3>
+                <h3>Share this {noun} to your story</h3>
                 <p>
                   {canShareFiles
                     ? "Tap Share and pick Instagram, Facebook or WhatsApp, then choose Story."
@@ -146,12 +156,12 @@ export default function StoryShare({ slug, url, title }: { slug: string; url: st
                     Download image
                   </button>
                   <button type="button" className="story-btn" onClick={() => copyLink()}>
-                    Copy post link
+                    Copy {noun} link
                   </button>
                 </div>
 
                 <p className="story-tip">
-                  Stories can&apos;t carry a link automatically. Add one with Instagram&apos;s <strong>Link</strong> sticker and paste the post link.
+                  Stories can&apos;t carry a link automatically. Add one with Instagram&apos;s <strong>Link</strong> sticker and paste the {noun} link.
                 </p>
                 {message && <p className="story-message" role="status">{message}</p>}
               </div>
