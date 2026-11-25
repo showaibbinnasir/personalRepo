@@ -87,7 +87,8 @@ export default async function BlogIndex({ searchParams }: { searchParams: Search
         </nav>
       )}
 
-      <section className="blog-list">
+      <section className="blog-list" aria-labelledby="blog-list-heading">
+        <h2 id="blog-list-heading" className="sr-only">{tag ? `Posts tagged ${tag}` : "All posts"}</h2>
         {!list && <div className="empty-public">THE BLOG IS UNAVAILABLE RIGHT NOW. PLEASE TRY AGAIN SHORTLY.</div>}
         {list && posts.length === 0 && (
           <div className="empty-public">{tag ? `NO POSTS TAGGED “${tag.toUpperCase()}” YET.` : "FIRST POSTS ARE ON THE WAY."}</div>
