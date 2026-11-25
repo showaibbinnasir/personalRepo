@@ -191,45 +191,48 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
     loadImage(portfolio?.profile.portraitUrl, 160, 160)
   ]);
 
-  // ---- Layout budget: everything must fit between the header and the footer. ----
-  const TEXT_W = 888 - 104; // card width minus padding
-  const CARD_MAX = 1150; // H - safe areas (150 + 300) - header - footer - gaps
+  // ---- Fixed layout: every story has the same structure and proportions. ----
+  // Card: photo slot (fixed) + text slot (fixed). Text adapts to its slot, never the other way round.
+  const CARD_H = 1150;
+  const MEDIA_H = 500;
+  const PAD_X = 56;
+  const TEXT_W = 888 - PAD_X * 2;
+  const TAGS_H = 46 + 26; // row + gap
+  const META_H = 30 + 26; // divider padding + one line
+  const TEXT_SLOT = CARD_H - MEDIA_H - 52 - 48 /* padding */ - META_H - 28 /* gap above meta */;
+
   const tags = (o.tags || []).filter(Boolean).map(t => clip(t, 20));
-  // Only as many tags as fit on one line.
   const shownTags: string[] = [];
   let tagsWidth = 0;
   for (const t of tags.slice(0, 3)) {
-    const w = t.length * 14.5 + 2 * 16 + 12;
+    const w = t.length * 14 + 2 * 16 + 12;
     if (tagsWidth + w > TEXT_W) break;
     shownTags.push(t);
     tagsWidth += w;
   }
-  const metaLeft = firstLabel(o.metaLeft);
+  const metaLeft = firstLabel(o.metaLeft, 24);
   const metaRight = clip(o.metaRight || "", 18);
 
-  // Title: biggest size that fits in 3 lines; at the smallest size it's shortened.
-  let titleSize = 84;
-  let titleFit = fitLines(o.title, titleSize, 0.6, TEXT_W, 3);
-  for (const size of [72, 62, 54]) {
-    if (!titleFit.truncated && titleFit.lines <= (titleSize >= 72 ? 2 : 3)) break;
-    titleSize = size;
-    titleFit = fitLines(o.title, size, 0.6, TEXT_W, 3);
+  const slot = TEXT_SLOT - (shownTags.length ? TAGS_H : 0);
+  const DESC_LH = 44;
+  // Largest title size that fits (max 3 lines) while leaving room for at least 2 description lines.
+  let titleSize = 52;
+  let titleFit = fitLines(o.title, 52, 0.6, TEXT_W, 3);
+  for (const size of [78, 68, 60, 52]) {
+    const f = fitLines(o.title, size, 0.6, TEXT_W, size >= 68 ? 2 : 3);
+    const h = Math.ceil(f.lines * size * 1.06);
+    const room = slot - h - (o.description ? 24 + 2 * DESC_LH : 0);
+    if (!f.truncated && room >= 0) {
+      titleSize = size;
+      titleFit = f;
+      break;
+    }
   }
   const titleH = Math.ceil(titleFit.lines * titleSize * 1.06);
-
-  const fixedH = 100 /* padding */ + (shownTags.length ? 72 : 0) + titleH + (metaLeft || metaRight ? 96 : 0);
-  // Description: up to 4 lines, fewer if the photo would get too small.
-  let descLines = 4;
-  let mediaH = 0;
-  for (; descLines >= 2; descLines--) {
-    mediaH = CARD_MAX - fixedH - (o.description ? 26 + descLines * 45 : 0);
-    if (mediaH >= 360) break;
-  }
-  descLines = Math.max(descLines, 2);
-  mediaH = Math.max(220, Math.min(cover ? 520 : 420, mediaH));
-  const descFit = fitLines(o.description || "", 32, 0.52, TEXT_W, descLines);
+  const descLines = Math.max(0, Math.min(4, Math.floor((slot - titleH - 24) / DESC_LH)));
+  const descFit = fitLines(o.description || "", 31, 0.52, TEXT_W, Math.max(1, descLines));
   const title = titleFit.text;
-  const description = descFit.text;
+  const description = descLines > 0 ? descFit.text : "";
 
   const rand = seeded(o.seed);
   const stars = Array.from({ length: 90 }, () => ({
@@ -262,64 +265,74 @@ export async function storyCardResponse(o: StoryCardOptions, portfolio: Portfoli
             <div style={{ display: "flex", fontSize: 46, fontWeight: 800, letterSpacing: -2 }}>
               SBN<span style={{ color: accent }}>•</span>
             </div>
-            <div style={{ display: "flex", fontFamily: "Mono", fontSize: 24, letterSpacing: 4, color: muted }}>{`// ${o.label}`}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, fontFamily: "Mono", fontSize: 22, letterSpacing: 4, color: fg, padding: "10px 20px", borderRadius: 999, border: "1.5px solid rgba(244,241,236,0.2)", background: "rgba(14,10,14,0.6)" }}>
+              <div style={{ display: "flex", width: 10, height: 10, borderRadius: 999, background: accent }} />
+              {o.label}
+            </div>
           </div>
 
-          {/* Card */}
-          <div style={{ flex: 1, minHeight: 0, display: "flex", alignItems: "center", margin: "36px 0" }}>
+          {/* Card: fixed size, fixed slots */}
+          <div style={{ display: "flex", flexShrink: 0, marginTop: 44 }}>
             <div
               style={{
-                display: "flex", flexDirection: "column", width: 888, maxHeight: CARD_MAX, borderRadius: 40, overflow: "hidden",
-                border: "2px solid rgba(244,241,236,0.14)", background: "rgba(14,10,14,0.86)",
+                display: "flex", flexDirection: "column", width: 888, height: CARD_H, borderRadius: 40, overflow: "hidden",
+                border: "2px solid rgba(244,241,236,0.14)", background: "rgba(14,10,14,0.9)",
                 boxShadow: `0 40px 120px -30px ${accent}88`
               }}
             >
+              {/* Photo slot */}
               {cover ? (
-                // flexShrink 0 so the photo keeps its computed height
-                <img src={cover} width={888} height={mediaH} style={{ width: 888, height: mediaH, flexShrink: 0, objectFit: "cover" }} />
+                <img src={cover} width={888} height={MEDIA_H} style={{ width: 888, height: MEDIA_H, flexShrink: 0, objectFit: "cover" }} />
               ) : (
-                <div style={{ width: 888, height: mediaH, flexShrink: 0, display: "flex" }}>
-                  <SpaceArt accent={accent} rand={seeded(`${o.seed}-art`)} width={888} height={mediaH} />
+                <div style={{ width: 888, height: MEDIA_H, flexShrink: 0, display: "flex" }}>
+                  <SpaceArt accent={accent} rand={seeded(`${o.seed}-art`)} width={888} height={MEDIA_H} />
                 </div>
               )}
+              <div style={{ display: "flex", flexShrink: 0, height: 4, width: 888, backgroundImage: `linear-gradient(90deg, ${accent}, rgba(167,25,25,0))` }} />
 
-              <div style={{ display: "flex", flexDirection: "column", padding: "48px 52px 52px" }}>
+              {/* Text slot */}
+              <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, padding: `48px ${PAD_X}px 52px` }}>
                 {shownTags.length > 0 && (
-                  <div style={{ display: "flex", flexShrink: 0, gap: 12, marginBottom: 28 }}>
+                  <div style={{ display: "flex", flexShrink: 0, height: 46, gap: 12, marginBottom: 26 }}>
                     {shownTags.map(tag => (
-                      <div key={tag} style={{ display: "flex", fontFamily: "Mono", fontSize: 22, letterSpacing: 1, padding: "8px 16px", borderRadius: 8, border: "1.5px solid rgba(244,241,236,0.18)", color: "#ddd6d0" }}>
-                        {clip(tag, 22)}
+                      <div key={tag} style={{ display: "flex", alignItems: "center", fontFamily: "Mono", fontSize: 21, letterSpacing: 1, padding: "0 16px", borderRadius: 8, border: "1.5px solid rgba(244,241,236,0.18)", color: "#ddd6d0" }}>
+                        {tag}
                       </div>
                     ))}
                   </div>
                 )}
                 <div style={{ display: "flex", flexShrink: 0, maxHeight: titleH, overflow: "hidden", fontSize: titleSize, fontWeight: 800, lineHeight: 1.04, letterSpacing: -2.5 }}>{title}</div>
                 {description && (
-                  <div style={{ display: "flex", flexShrink: 0, maxHeight: descFit.lines * 45, overflow: "hidden", marginTop: 26, fontSize: 32, lineHeight: 1.4, color: "#c2bab4" }}>{description}</div>
+                  <div style={{ display: "flex", flexShrink: 0, maxHeight: descLines * DESC_LH, overflow: "hidden", marginTop: 24, fontSize: 31, lineHeight: 1.42, color: "#c2bab4" }}>{description}</div>
                 )}
-                {(metaLeft || metaRight) && <div style={{ display: "flex", flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", alignItems: "center", gap: 16, marginTop: 36, paddingTop: 28, borderTop: "2px dashed rgba(244,241,236,0.14)", fontFamily: "Mono", fontSize: 24, letterSpacing: 2, color: muted }}>
-                  {metaLeft && <span>{metaLeft}</span>}
-                  {metaLeft && metaRight && <span style={{ color: accent }}>{"//"}</span>}
-                  {metaRight && <span>{metaRight}</span>}
-                </div>}
+
+                {/* Info row, pinned to the bottom of the card */}
+                {(metaLeft || metaRight) && (
+                  <div style={{ display: "flex", flexShrink: 0, marginTop: "auto", paddingTop: 26, borderTop: "2px dashed rgba(244,241,236,0.14)", justifyContent: "space-between", alignItems: "center", whiteSpace: "nowrap", fontFamily: "Mono", fontSize: 23, letterSpacing: 2, color: muted }}>
+                    <span>{metaLeft}</span>
+                    <span style={{ color: fg }}>{metaRight}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Footer: author + where to read it */}
-          <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 24 }}>
-            {avatar ? (
-              <img src={avatar} width={84} height={84} style={{ width: 84, height: 84, flexShrink: 0, borderRadius: 999, objectFit: "cover", border: `3px solid ${accent}` }} />
-            ) : (
-              <div style={{ width: 84, height: 84, borderRadius: 999, display: "flex", alignItems: "center", justifyContent: "center", border: `3px solid ${accent}`, fontSize: 26, fontWeight: 800 }}>SBN</div>
-            )}
-            <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-              <div style={{ display: "flex", fontSize: 32, fontWeight: 800, letterSpacing: -0.5 }}>{clip(name, 34)}</div>
-              {role && <div style={{ display: "flex", fontSize: 24, color: muted, marginTop: 4 }}>{clip(role, 46)}</div>}
+          {/* Footer: author on the left, site address on the right */}
+          <div style={{ display: "flex", flexShrink: 0, marginTop: "auto", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 22, minWidth: 0 }}>
+              {avatar ? (
+                <img src={avatar} width={84} height={84} style={{ width: 84, height: 84, flexShrink: 0, borderRadius: 999, objectFit: "cover", border: `3px solid ${accent}` }} />
+              ) : (
+                <div style={{ width: 84, height: 84, flexShrink: 0, borderRadius: 999, display: "flex", alignItems: "center", justifyContent: "center", border: `3px solid ${accent}`, fontSize: 26, fontWeight: 800 }}>SBN</div>
+              )}
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", fontSize: 30, fontWeight: 800, letterSpacing: -0.5 }}>{clip(name, 30)}</div>
+                {role && <div style={{ display: "flex", fontSize: 22, color: muted, marginTop: 4 }}>{clip(role, 44)}</div>}
+              </div>
             </div>
           </div>
-          <div style={{ display: "flex", flexShrink: 0, whiteSpace: "nowrap", overflow: "hidden", marginTop: 26, fontFamily: "Mono", fontSize: 24, letterSpacing: 1, color: fg }}>
-            <span style={{ color: accent, marginRight: 14 }}>•</span>
+          <div style={{ display: "flex", flexShrink: 0, marginTop: 24, alignItems: "center", gap: 14, whiteSpace: "nowrap", fontFamily: "Mono", fontSize: 23, letterSpacing: 1, color: fg }}>
+            <span style={{ color: accent }}>•</span>
             {`${o.cta} ${clip(`${host}${o.path}`, 40)}`}
           </div>
         </div>
