@@ -122,7 +122,7 @@ const portfolioSchema = new mongoose.Schema(
       background: { type: String, default: "#080606" },
       foreground: { type: String, default: "#F4F1EC" },
       muted: { type: String, default: "#A9A4A0" },
-      footerNote: { type: String, default: "Designed around clarity, engineering and intelligent systems." }
+      footerNote: { type: String, default: "Designed by Showaib Bin Nasir" }
     }
   },
   { timestamps: true, minimize: false }

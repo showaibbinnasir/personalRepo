@@ -399,7 +399,7 @@ export default function BlogManager({
         <button type="button" className="cms-empty cms-empty--large" onClick={openNew}>
           <Icon name="blog" size={28} />
           <strong>Write your first post</strong>
-          <span>Share ideas, project write-ups and lessons learned. Posts get their own SEO-ready page, social share card and RSS entry.</span>
+          <span>Share ideas, project write-ups and lessons learned. Posts get their own SEO-ready page, and a social share card.</span>
         </button>
       ) : visible.length === 0 ? (
         <div className="cms-empty">No posts match this filter.</div>
