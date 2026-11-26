@@ -128,6 +128,8 @@ export default function StoryShare({ slug, url, title, imagePath, noun = "post" 
             <div className="story-panel">
               <button ref={closeRef} type="button" className="story-close" onClick={close} aria-label="Close">×</button>
 
+              {/* On phones only this part scrolls, so the close button always stays in view. */}
+              <div className="story-body">
               <div className="story-preview">
                 {status === "error" ? (
                   <p>Couldn&apos;t create the story image. Please try again.</p>
@@ -164,6 +166,7 @@ export default function StoryShare({ slug, url, title, imagePath, noun = "post" 
                   Stories can&apos;t carry a link automatically. Add one with Instagram&apos;s <strong>Link</strong> sticker and paste the {noun} link.
                 </p>
                 {message && <p className="story-message" role="status">{message}</p>}
+              </div>
               </div>
             </div>
           </div>,
