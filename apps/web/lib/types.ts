@@ -1,7 +1,7 @@
 export type BaseItem = { id: string; visible?: boolean; order?: number };
 export type Experience = BaseItem & { role: string; organization: string; location?: string; startDate?: string; endDate?: string; current?: boolean; description: string[] };
 export type Education = BaseItem & { institution: string; degree: string; location?: string; startDate?: string; endDate?: string; status?: string; description?: string };
-export type Project = BaseItem & { title: string; category?: string; summary?: string; description?: string; tech: string[]; imageUrl?: string; liveUrl?: string; githubUrl?: string; featured?: boolean };
+export type Project = BaseItem & { title: string; category?: string; summary?: string; description?: string; tech: string[]; imageUrl?: string; liveUrl?: string; githubUrl?: string; license?: string; featured?: boolean };
 export type SkillGroup = BaseItem & { category: string; skills: string[] };
 export type Certification = BaseItem & { name: string; issuer?: string; date?: string; credentialUrl?: string };
 export type Achievement = BaseItem & { title: string; organization?: string; date?: string; description?: string };

@@ -6,9 +6,9 @@ import ImageUploader from "./ImageUploader";
 import RichTextEditor from "./RichTextEditor";
 import TagInput from "./TagInput";
 
-export type FieldType = "text" | "url" | "textarea" | "checkbox" | "lines" | "csv" | "image" | "richtext";
+export type FieldType = "text" | "url" | "textarea" | "checkbox" | "lines" | "csv" | "image" | "richtext" | "select";
 
-export type Field = { key: string; label: string; type?: FieldType; full?: boolean; placeholder?: string; hint?: string };
+export type Field = { key: string; label: string; type?: FieldType; full?: boolean; placeholder?: string; hint?: string; options?: { value: string; label: string }[] };
 
 type Props = {
   title: string;
@@ -101,6 +101,12 @@ export default function ArrayEditor({ title, items, onChange, fields, blank, lab
             placeholder={field.placeholder || "One point per line"}
             onChange={e => update(index, field.key, e.target.value.split("\n"))}
           />
+        );
+      case "select":
+        return wrap(
+          <select id={id} className="cms-input cms-select" value={value || ""} onChange={e => update(index, field.key, e.target.value)}>
+            {(field.options || []).map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
         );
       case "csv":
         return wrap(<TagInput value={Array.isArray(value) ? value : []} onChange={v => update(index, field.key, v)} placeholder={field.placeholder} />);
