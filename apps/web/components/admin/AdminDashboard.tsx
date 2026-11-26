@@ -1,5 +1,6 @@
 "use client";
 
+import { LICENSES } from "@/lib/licenses";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { BlogPostSummary, Portfolio } from "@/lib/types";
 import { HOME_SECTIONS, resolveSectionOrder } from "@/components/PortfolioSite";
@@ -61,6 +62,7 @@ const F: Record<string, Field[]> = {
     { key: "imageUrl", label: "Cover image", type: "image", full: true },
     { key: "tech", label: "Technologies", type: "csv", full: true, placeholder: "Python, ROS, PyTorch…" },
     { key: "liveUrl", label: "Live URL", type: "url" }, { key: "githubUrl", label: "GitHub URL", type: "url" },
+    { key: "license", label: "Licence", type: "select", options: [{ value: "", label: "No licence shown" }, ...LICENSES.map(l => ({ value: l.id, label: l.id === "Proprietary" ? "Proprietary (all rights reserved)" : `${l.name} (${l.id})` }))], hint: "Shown as a badge on the project card and the project page." },
     { key: "featured", label: "Featured (wide card)", type: "checkbox" },
     { key: "description", label: "Case study", type: "richtext", full: true, hint: "Optional. When filled in, the card links to a full case-study page." }
   ],
@@ -250,7 +252,7 @@ export default function AdminDashboard() {
   const array = (t: Tab) => {
     const common = { title: "", items: [] as any[], onChange: (_: any[]) => {}, fields: [] as Field[], blank: {}, labelKey: "", subtitleKeys: [] as string[] };
     switch (t) {
-      case "Projects": return { ...common, title: "Project", items: data.projects, onChange: (v: any[]) => setData({ ...data, projects: v }), fields: F.projects, blank: { title: "", category: "", summary: "", description: "", tech: [], imageUrl: "", liveUrl: "", githubUrl: "", featured: false }, labelKey: "title", subtitleKeys: ["category"] };
+      case "Projects": return { ...common, title: "Project", items: data.projects, onChange: (v: any[]) => setData({ ...data, projects: v }), fields: F.projects, blank: { title: "", category: "", summary: "", description: "", tech: [], imageUrl: "", liveUrl: "", githubUrl: "", license: "", featured: false }, labelKey: "title", subtitleKeys: ["category", "license"] };
       case "Experience": return { ...common, title: "Role", items: data.experiences, onChange: (v: any[]) => setData({ ...data, experiences: v }), fields: F.experience, blank: { role: "", organization: "", location: "", startDate: "", endDate: "", current: false, description: [] }, labelKey: "role", subtitleKeys: ["organization", "startDate"] };
       case "Education": return { ...common, title: "Qualification", items: data.education, onChange: (v: any[]) => setData({ ...data, education: v }), fields: F.education, blank: { degree: "", institution: "", location: "", startDate: "", endDate: "", status: "", description: "" }, labelKey: "degree", subtitleKeys: ["institution", "endDate"] };
       case "Skills": return { ...common, title: "Skill group", items: data.skillGroups, onChange: (v: any[]) => setData({ ...data, skillGroups: v }), fields: F.skills, blank: { category: "", skills: [] }, labelKey: "category" };

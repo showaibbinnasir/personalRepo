@@ -9,6 +9,7 @@ import MobileMenu from "./MobileMenu";
 import LabTabs from "./LabTabs";
 import SkillsExplorer from "./SkillsExplorer";
 import CardArt from "./CardArt";
+import LicenseBadge from "./LicenseBadge";
 
 const OLD_FOOTER_NOTE = "Designed around clarity, engineering and intelligent systems.";
 const DEFAULT_FOOTER_NOTE = "Designed by Showaib Bin Nasir";
@@ -266,6 +267,7 @@ export default function PortfolioSite({ data, posts = [] }: { data: Portfolio; p
                         {caseStudy && <a href={`/projects/${encodeURIComponent(project.id)}`}>Case study <i aria-hidden="true">→</i></a>}
                         {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">Live <i aria-hidden="true">↗</i></a>}
                         {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noreferrer">Code <i aria-hidden="true">↗</i></a>}
+                        <LicenseBadge value={project.license} />
                       </div>
                     </div>
                   </article>

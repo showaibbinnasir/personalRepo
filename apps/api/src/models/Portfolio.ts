@@ -39,6 +39,7 @@ const projectSchema = new mongoose.Schema({
   imageUrl: String,
   liveUrl: String,
   githubUrl: String,
+  license: String,
   featured: Boolean
 }, itemOptions);
 

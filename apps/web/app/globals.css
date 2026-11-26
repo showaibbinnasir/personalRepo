@@ -4842,3 +4842,96 @@ html.robot-cursor-on [contenteditable="true"] * {
         height: min(50dvh, 520px)
     }
 }
+
+/* ---------- Licence badge (project cards + project page) ---------- */
+
+.license-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    padding: 0 9px;
+    border: 1px solid var(--card-line-strong);
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--fg);
+    background: rgba(244, 241, 236, .04)
+}
+
+.license-badge svg {
+    flex-shrink: 0;
+    color: var(--accent-text)
+}
+
+.license-badge.is-closed {
+    color: var(--muted)
+}
+
+.license-badge.is-closed svg {
+    color: var(--muted)
+}
+
+.card-links .license-badge {
+    margin-left: auto;
+    align-self: center
+}
+
+.license-badge--lg {
+    min-height: 32px;
+    padding: 0 14px;
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: none
+}
+
+.license-badge--lg svg {
+    width: 15px;
+    height: 15px
+}
+
+.project-license {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--card-line)
+}
+
+.project-license-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent-text)
+}
+
+.project-license p {
+    margin: 0;
+    flex: 1 1 260px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5
+}
+
+.project-license a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg);
+    border-bottom: 1px solid var(--card-line-strong)
+}
+
+.project-license a:hover {
+    border-color: var(--fg)
+}

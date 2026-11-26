@@ -4,6 +4,8 @@ import { sanitizeRichText } from "@/lib/richtext";
 import SiteHeader from "@/components/SiteHeader";
 import ShareButtons from "@/components/ShareButtons";
 import StoryShare from "@/components/StoryShare";
+import LicenseBadge from "@/components/LicenseBadge";
+import { getLicense } from "@/lib/licenses";
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 
@@ -75,6 +77,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   const position = ordered.findIndex(p => p.id === project.id);
   const nextProject = ordered.length > 1 ? ordered[(position + 1) % ordered.length] : null;
 
+  const license = getLicense(project.license);
   const projectLd = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -84,6 +87,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     url: `${SITE_URL}/projects/${encodeURIComponent(project.id)}`,
     creator: { "@type": "Person", name: portfolio.profile.name },
     keywords: project.tech?.length ? project.tech.join(", ") : undefined,
+    license: license?.url || license?.name,
     ...(project.liveUrl ? { sameAs: [project.liveUrl] } : {})
   };
 
@@ -100,6 +104,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         <div className="project-detail-kicker">
           <span>{project.category || "Project"}</span>
           <span>{html ? "Case study" : "Project"}</span>
+          {license && <span>{license.id === "Proprietary" ? "All rights reserved" : `${license.short} licensed`}</span>}
         </div>
 
         <h1>{project.title}</h1>
@@ -110,7 +115,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
           <ShareButtons url={url} title={project.title} text={shareText} noun="project" compact />
         </div>
 
-        {(tech.length > 0 || project.liveUrl || project.githubUrl) && (
+        {(tech.length > 0 || project.liveUrl || project.githubUrl || license) && (
           <section className="project-specs" aria-label="Project details">
             {tech.length > 0 && (
               <div className="project-specs-stack">
@@ -134,6 +139,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                   <a className="project-action" href={project.githubUrl} target="_blank" rel="noreferrer">
                     Source code <i aria-hidden="true">↗</i>
                   </a>
+                )}
+              </div>
+            )}
+            {license && (
+              <div className="project-license">
+                <span className="project-license-label">{"// Licence"}</span>
+                <LicenseBadge value={project.license} size="lg" />
+                {license.summary && <p>{license.summary}</p>}
+                {license.url && (
+                  <a href={license.url} target="_blank" rel="noreferrer license">Read the licence <i aria-hidden="true">↗</i></a>
                 )}
               </div>
             )}
