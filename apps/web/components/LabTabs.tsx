@@ -3,10 +3,18 @@
 import { useState } from "react";
 import RobotArmLab from "./RobotArmLab";
 import PidPlayground from "./PidPlayground";
+import dynamic from "next/dynamic";
+
+// Loaded only when its tab is opened (it carries the Bangladesh map data).
+const SearchLab = dynamic(() => import("./SearchLab"), {
+  ssr: false,
+  loading: () => <div className="search-loading">Loading the map…</div>
+});
 
 const LABS = [
   { id: "arm", label: "Robot arm", sub: "Inverse kinematics" },
-  { id: "pid", label: "PID tuning", sub: "Control systems" }
+  { id: "pid", label: "PID tuning", sub: "Control systems" },
+  { id: "search", label: "Search agents", sub: "AI search algorithms" }
 ] as const;
 
 /** Switches between the lab experiments. Only the active one is mounted (and animating). */
@@ -33,7 +41,7 @@ export default function LabTabs() {
         ))}
       </div>
       <div role="tabpanel" id={`lab-panel-${active}`} aria-labelledby={`lab-tab-${active}`} className="lab-panel" key={active}>
-        {active === "arm" ? <RobotArmLab /> : <PidPlayground />}
+        {active === "arm" ? <RobotArmLab /> : active === "pid" ? <PidPlayground /> : <SearchLab />}
       </div>
     </div>
   );
